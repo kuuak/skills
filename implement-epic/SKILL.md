@@ -78,12 +78,12 @@ Each subagent is `general-purpose` and runs in the background, and each reads it
 **Fixer**, one per ready sub-issue. The epic branch is its base branch: its worktree starts from `origin/<epic branch>` and its PR targets the epic branch.
 
 - the issue number, `base branch <epic branch>`, and the acceptance criteria from triage
-- `Read /Users/Shared/dotfiles/claude/skills/fix-issues/FIXER.md and follow it.`
+- `Read <this skill's base directory>/../fix-issues/FIXER.md and follow it.`
 
 **Reviewer**, the moment a fixer returns a PR:
 
 - `PR <pr>, issue <n>, worktree <absolute path>`
-- `Read /Users/Shared/dotfiles/claude/skills/fix-issues/REVIEWER.md and follow it.`
+- `Read <this skill's base directory>/../fix-issues/REVIEWER.md and follow it.`
 
 The reviewer prompt holds exactly those lines and nothing from the fixer's report: it judges the PR against the issue, never against the fixer's intent.
 
@@ -113,7 +113,7 @@ Run this step only when every sub-issue of the epic is closed; otherwise the epi
 Set up a worktree on the epic branch: the one on it in `git worktree list`, else `git worktree add <repo root>/.claude/worktrees/epic-<epic> <epic branch>`. Then spawn one more reviewer, in the background, with exactly these lines:
 
 - `PR <epic pr>, issue <epic>, worktree <absolute path>`
-- `Read /Users/Shared/dotfiles/claude/skills/fix-issues/REVIEWER.md and follow it.`
+- `Read <this skill's base directory>/../fix-issues/REVIEWER.md and follow it.`
 
 It reviews the integrated work against the epic, pushes its fixes onto the epic branch, comments its findings, and marks the epic PR ready as its last act, so the PR turns ready exactly when the review is finished. Nothing else writes to the epic branch while it runs.
 

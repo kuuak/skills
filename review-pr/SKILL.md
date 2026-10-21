@@ -21,7 +21,7 @@ You are the **dispatcher**. Each PR in `$ARGUMENTS` gets one **reviewer**: a bac
 Run at most **4 reviewers at once**, in the background. Each reviewer prompt holds exactly these lines:
 
 - `PR <pr>, issue <n>, worktree <absolute path>`, writing `issue none` when the PR has no closing issue
-- `Read /Users/Shared/dotfiles/claude/skills/fix-issues/REVIEWER.md and follow it.`
+- `Read <this skill's base directory>/../fix-issues/REVIEWER.md and follow it.`
 
 The reviewer reads its own brief and the diff: its fresh eyes are its whole value, so your prompt carries the path and the numbers alone.
 
