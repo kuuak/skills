@@ -5,8 +5,9 @@ Claude Code skills for working through GitHub issues with subagents: each issue 
 - `fix-issues` — fix GitHub issues (ids, or a query like "ready-for-agent in milestone X") in parallel subagents, one worktree and PR per issue, then review, fix, and comment on each PR; add `and merge` to also fix the nits and merge
 - `implement-epic` — implement an epic's sub-issues in dependency order on an epic branch (fix, review, fix nits, merge), then review the epic PR and mark it ready
 - `review-pr` — review existing PRs in subagents that fix what is wrong and comment their findings
+- `merge-dependabot` — batch the open Dependabot PRs into one branch and draft PR, applying minor and patch bumps and asking about each major
 
-All three are user-invoked: run them as `/fix-issues 580 612`, `/implement-epic 42`, `/review-pr 701`.
+The first three are user-invoked: run them as `/fix-issues 580 612`, `/implement-epic 42`, `/review-pr 701`. `merge-dependabot` also triggers on its own when you ask to merge or batch Dependabot updates, or run it as `/merge-dependabot [branch]`.
 
 ## Install
 
