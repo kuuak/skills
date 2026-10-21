@@ -13,7 +13,7 @@ The request: `$ARGUMENTS`
 
 ## 1. Resolve the epic
 
-- `gh issue view <epic> --comments`.
+- `gh issue view <epic> --json title,body,labels,comments`.
 - The sub-issues are the union of GitHub's sub-issues and the issues the epic's task list references (`- [ ] #612`):
 
   ```bash
@@ -50,7 +50,7 @@ Then look for the epic PR from an earlier run: `gh pr list --head <epic branch> 
 
 ## 3. Triage and order
 
-Read each open sub-issue with its comments and write its **acceptance criteria**: what must be true for it to close. When a sub-issue only describes a symptom, the criterion is "the symptom no longer reproduces".
+Read each open sub-issue with its comments (`gh issue view <n> --json title,body,labels,comments`) and write its **acceptance criteria**: what must be true for it to close. When a sub-issue only describes a symptom, the criterion is "the symptom no longer reproduces".
 
 Then build the **order**: for each sub-issue, the sub-issues that must land on the epic branch before it starts.
 
@@ -87,10 +87,10 @@ Each subagent is `general-purpose` and runs in the background, and each reads it
 
 The reviewer prompt holds exactly those lines and nothing from the fixer's report: it judges the PR against the issue, never against the fixer's intent.
 
-**Merger**, when a reviewer returns with nothing needing a decision. Mergers run one at a time, the **merge lane**: each one updates its branch against an epic branch no other merger is moving.
+**Merger**, when a reviewer returns with nothing needing a decision and nothing held back. Mergers run one at a time, the **merge lane**: each one updates its branch against an epic branch no other merger is moving.
 
 - `PR <pr>, issue <n>, worktree <absolute path>`
-- `Read <this skill's base directory>/MERGER.md and follow it.`
+- `Read <this skill's base directory>/../fix-issues/MERGER.md and follow it.`
 
 When the first merger returns `merged` and no epic PR is open, open it as a draft:
 
@@ -100,7 +100,7 @@ gh pr create --draft --base <base> --head <epic branch> --title "<epic title>" -
 
 It stays a draft through the rest of the run: only the epic review in step 5 marks it ready.
 
-A sub-issue **stalls** when its fixer returns a question, its reviewer returns anything needing a decision, or its merger hands back. Everything ordered after a stalled sub-issue stalls with it; the rest of the epic keeps running. A merger that reports the merge blocked by branch protection closes the merge lane for the whole run: every later merge would hit the same rule, so finish the reviews already in flight and go to step 6.
+A sub-issue **stalls** when its fixer returns a question, its reviewer returns anything needing a decision, or its merger hands back. Everything ordered after a stalled sub-issue stalls with it; the rest of the epic keeps running. A merger returning `blocked by branch protection` or `merge not permitted` closes the merge lane for the whole run: every later merge would hit the same rule, so finish the reviews already in flight and go to step 6.
 
 Keep one line per sub-issue (stage, PR, outcome) as the subagents return.
 
@@ -121,12 +121,17 @@ It reviews the integrated work against the epic, pushes its fixes onto the epic 
 
 ## 6. Report
 
-Write the report: one table, then each stalled sub-issue with its question and what stalled behind it, the sub-issues that sat out and why, the epic review's findings needing a decision, and the worktree paths still on disk.
+Write the report, decisions first:
 
-| Order | Sub-issue | PR | Fixed in review | Nits fixed | Status |
-|-------|-----------|----|-----------------|------------|--------|
+1. **Decisions**: each stalled sub-issue's question with what stalled behind it, and the epic review's findings needing a decision, numbered so the user can answer by number. Write each as the decision, its options, and your recommendation. Leave the section out when there are none.
+2. One table:
 
-Put it in the epic PR's body below `Closes #<epic>` (`gh pr edit <epic pr> --body-file <file>`), and post it on the epic (`gh issue comment <epic> --body-file <file>`). `Closes` only fires on merges into the default branch: with any other base, the report says the epic needs closing by hand once its PR merges.
+   | Order | Sub-issue | PR | Fixed in review | Nits fixed | Status |
+   |-------|-----------|----|-----------------|------------|--------|
+
+3. The sub-issues that sat out and why, and the worktree paths still on disk.
+
+Put it in the epic PR's body below `Closes #<epic>` (`gh pr edit <epic pr> --body-file <file>`), and post it on the epic (`gh issue comment <epic> --body-file <file>`). `Closes` only fires on merges into the default branch: with any other base, the report says the epic needs closing by hand once its PR merges. Security findings a subagent held back top the decisions in the user's copy alone: the PR body and the epic stay free of them.
 
 Confirm every landed sub-issue is closed and every stalled one carries `ready-for-human`; fix any label still on `in-progress` yourself. The epic ends on `ready-for-review` after its review, or on `ready-for-human` when a sub-issue is stalled or the review left a decision open.
 

@@ -11,9 +11,15 @@ gh issue edit <n> --remove-label in-progress --add-label ready-for-human
 
 Then return the question with what you found.
 
+## Working rules
+
+- Open each file with the Read tool before you Edit or Write it: Edit refuses a file you have only seen through `cat` or `sed`.
+- The task list and wrap-up belong to the orchestrator: your return message is your whole output, so leave `update_plan` and `wrap_up` to it.
+- Return only once every background agent and command you started has finished: your return tells the orchestrator your work is done.
+
 ## 1. Claim and read
 
-`gh issue view <n> --comments`, then claim the issue before any other work:
+`gh issue view <n> --json title,body,labels,comments`, then claim the issue before any other work:
 
 ```bash
 gh issue edit <n> --add-assignee @me --add-label in-progress --remove-label ready-for-agent
@@ -38,7 +44,7 @@ Every later command runs inside this worktree. The main checkout and the other f
 
 Work test-first: for each criterion, write a test that goes **red** on the current code, then make the change that turns it **green**. A criterion no test can reach (copy, styling, config) gets a written verification instead, for the PR body.
 
-Keep the diff to what the issue asks. Anything out of scope you notice goes in the PR body under **Noticed**.
+Keep the diff to what the issue asks. Anything out of scope you notice goes in the PR body under **Noticed**, except a security weakness in a public repo (`gh repo view --json visibility`): that goes in your return alone.
 
 **Done when:** every criterion maps to a green test or a written verification, and every check the project defines (lint, typecheck, tests, as its manifest or CI workflow runs them) passes.
 
@@ -50,4 +56,4 @@ Commit, push, and `gh pr create --draft --base <base> --body-file <file>`. The b
 
 ## Return
 
-The PR number and URL, the worktree's absolute path, and one line per criterion saying how it is verified. Or, when you stopped early: the question, what you found, and the worktree path.
+The PR number and URL, the worktree's absolute path, one line per criterion saying how it is verified, and any security weakness you kept out of the PR body. Or, when you stopped early: the question, what you found, and the worktree path.

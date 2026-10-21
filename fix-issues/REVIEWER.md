@@ -4,9 +4,15 @@ You review a PR you did not write, fix what is wrong, and leave one comment sayi
 
 Your prompt gives you a PR number, an issue number, and a worktree path. Every command runs inside that worktree; other agents work in their own worktrees alongside you.
 
+## Working rules
+
+- Open each file with the Read tool before you Edit or Write it: Edit refuses a file you have only seen through `cat` or `sed`.
+- The task list and wrap-up belong to the orchestrator: your return message is your whole output, so leave `update_plan` and `wrap_up` to it.
+- Return only once every background agent and command you started has finished: your return tells the orchestrator your work is done.
+
 ## 1. Gather
 
-- `gh issue view <issue> --comments`: the spec, including its acceptance criteria. With `issue none`, the PR body is the spec.
+- `gh issue view <issue> --json title,body,labels,comments`: the spec, including its acceptance criteria. With `issue none`, the PR body is the spec.
 - `gh pr view <pr> --json baseRefName,body` and `gh pr diff <pr>`: the change and the branch it targets (`<base>` below).
 - Each changed file, read in full around its hunks.
 - The repo's conventions: `CLAUDE.md` / `AGENTS.md`, `CONTRIBUTING`, the neighbouring code.
@@ -30,6 +36,8 @@ Every finding carries a `file:line` and a concrete failure scenario (this input 
 For each blocker and should-fix: make the change, run the project's checks, and commit it alone as `fix(review): <finding>`. Push your commits on top of the branch, leaving its history intact so the author sees exactly what you changed. Nits go in the comment, unfixed.
 
 A fix that needs a product decision the issue does not settle stays unfixed, marked **needs decision** with the question.
+
+**Public repos.** When `gh repo view --json visibility` says `PUBLIC`, your commits and comment are world-readable. A security finding someone could exploit appears in them only as a neutral line (`fix(review): harden input handling in <file>`, a table row with the same words and no Details entry); its scenario goes in your return alone, under **Security, held back**. An unfixed one makes the verdict `needs decision`.
 
 **Done when:** every blocker and should-fix is either fixed in a pushed commit or marked needs decision, and the checks pass on the final push.
 
@@ -63,4 +71,4 @@ gh pr ready <pr>
 gh issue edit <issue> --remove-label in-progress --add-label ready-for-review
 ```
 
-**Done when:** the comment is posted, the PR is no longer a draft, and any issue carries `ready-for-review` in place of `in-progress`. Return the comment URL and the count of findings fixed, open, and needing a decision.
+**Done when:** the comment is posted, the PR is no longer a draft, and any issue carries `ready-for-review` in place of `in-progress`. Return the comment URL, the count of findings fixed, open, and needing a decision, and any **Security, held back** findings with their scenarios.

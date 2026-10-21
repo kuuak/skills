@@ -29,9 +29,12 @@ The reviewer reads its own brief and the diff: its fresh eyes are its whole valu
 
 ## 3. Report
 
-Confirm each review comment is on its PR (`gh pr view <pr> --comments`), then give the user one table:
+Confirm each review comment is on its PR (`gh pr view <pr> --comments`), then give the user the report, decisions first:
 
-| PR | Review comment | Fixed | Open | Needs decision |
-|----|----------------|-------|------|----------------|
+1. **Decisions**: every finding needing a decision and every security finding held back, numbered so the user can answer by number. Write each as the decision, its options, and your recommendation. Leave the section out when there are none.
+2. One table:
 
-Below it, list each **needs decision** question, the skipped PRs and why, and the worktree paths.
+   | PR | Review comment | Fixed | Open | Needs decision |
+   |----|----------------|-------|------|----------------|
+
+3. The skipped PRs and why, and the worktree paths.

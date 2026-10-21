@@ -11,10 +11,16 @@ gh issue edit <n> --remove-label ready-for-review --add-label ready-for-human
 
 Then return what blocks it.
 
+## Working rules
+
+- Open each file with the Read tool before you Edit or Write it: Edit refuses a file you have only seen through `cat` or `sed`.
+- The task list and wrap-up belong to the orchestrator: your return message is your whole output, so leave `update_plan` and `wrap_up` to it.
+- Return only once every background agent and command you started has finished: your return tells the orchestrator your work is done.
+
 ## 1. Gather
 
 - `gh pr view <pr> --json baseRefName,headRefName,mergeStateStatus --comments`: the branches, and the `## Automated review` comment with its findings table.
-- `gh issue view <n>`: the spec the PR answers to.
+- `gh issue view <n> --json title,body,labels,comments`: the spec the PR answers to.
 
 Hand back when the review's verdict is anything but `ready to merge`.
 
@@ -41,7 +47,7 @@ Merge rather than rebase, so the review's commits keep their SHAs. Resolve confl
 
 ## 4. Get CI green
 
-`gh pr checks <pr> --watch`. A repo with no checks makes step 3's local run the gate.
+`gh pr checks <pr> --watch`, run in the background: CI outlasts a foreground command's timeout, and you are notified when it exits. A repo with no checks makes step 3's local run the gate.
 
 On a red check, read its log (`gh run view <run-id> --log-failed`). A failure this PR caused gets a fix commit, the checks, a push, and another watch. A failure unrelated to the diff gets one rerun (`gh run rerun <run-id> --failed`). After two fix attempts, or a rerun that fails again, hand back with the failing check and its log excerpt.
 
@@ -58,7 +64,7 @@ git push origin --delete <head>
 
 Delete the remote branch with `git push`: `gh pr merge --delete-branch` tries to check out the base inside this worktree, which fails while the main checkout holds it. A branch the repo already auto-deleted makes that push fail harmlessly.
 
-When branch protection blocks the merge (a required approval, a required check this account cannot satisfy), hand back and return `blocked by branch protection`. The merge goes through only on the repo's own rules.
+When branch protection blocks the merge (a required approval, a required check this account cannot satisfy), hand back and return `blocked by branch protection`. When your tools refuse the merge command (a permission check), leave the PR and its labels as they are and return `merge not permitted`: the user approves merges for this session. Either way the merge goes through only on the repo's and the user's own rules.
 
 Then:
 
