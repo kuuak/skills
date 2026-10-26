@@ -4,7 +4,7 @@ The client reads this report to decide whether the site is safe and what to do n
 
 ## Files
 
-In `doc/audits/` of the audited repo (create it when missing): `Rapport-incident-<Client>-<YYYY-MM-DD>.html` and the `.pdf` that [`render.sh`](render.sh) makes from it (`Security-report-<Client>-<YYYY-MM-DD>` in English). Edit the HTML and re-render; the PDF is never edited by hand.
+In the audit folder chosen in step 1 of [`SKILL.md`](SKILL.md) (create it when missing): `Rapport-incident-<Client>-<YYYY-MM-DD>.html` and the `.pdf` that [`render.sh`](render.sh) makes from it (`Security-report-<Client>-<YYYY-MM-DD>` in English). Edit the HTML and re-render; the PDF is never edited by hand.
 
 ## Sections, in order
 
@@ -33,7 +33,7 @@ Rows: the vulnerability's short name (exposure: "Non exposé", "Tentatives sans 
 ## Render and check
 
 ```bash
-<skill-dir>/render.sh doc/audits/<name>.html
+<skill-dir>/render.sh <audit-folder>/<name>.html
 ```
 
 It writes the PDF beside the HTML and one PNG per page into the scratchpad folder it prints. Read every PNG; fix splits with `break-inside: avoid` on the element or by trimming text, and re-render until every page passes.

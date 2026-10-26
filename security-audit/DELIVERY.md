@@ -4,7 +4,7 @@ Step 8 of [`SKILL.md`](SKILL.md): the email that carries the report, then the Cl
 
 ## Email draft
 
-Write it in the report's language and in the register of the client's own emails (the French `tu` or `vous` they use), into `doc/audits/email-<report name>.md` beside the report:
+Write it in the report's language and in the register of the client's own emails (the French `tu` or `vous` they use), into `email-<report name>.md` in the audit folder, beside the report:
 
 - **Subject:** the vulnerability's usual name, "rapport d'incident", and the sites.
 - **Opening:** following the vulnerability, we proactively ran a short security audit of the sites; the report is attached. When the user already told the client about the patch, open by recalling it ("As already discussed, we patched …") and present the audit as the step beyond it.

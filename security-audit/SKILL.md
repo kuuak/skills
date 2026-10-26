@@ -14,14 +14,19 @@ A client email the user pastes is context for the email draft in step 8. The rep
 
 ## 1. Scope
 
-Read the project memory (hosting and forensics notes from earlier audits), `CLAUDE.md`, deploy docs and config (`wp-cli.yml` aliases, deploy scripts, CI files) and `~/.ssh/config` for host aliases matching the project. Then ask, in one `AskUserQuestion`, only what is still unknown:
+Read the project memory (hosting and forensics notes from earlier audits), `CLAUDE.md`, deploy docs and config (`wp-cli.yml` aliases, deploy scripts, CI files) and `~/.ssh/config` for host aliases matching the project.
+
+Pick the **audit folder** in the audited repo, where the report and email draft go: an existing audits folder (`docs/audit/`, `doc/audits/`, …) or the one the project memory names; otherwise `audits/` inside the repo's existing docs folder (`docs/`, `doc/`, `documentation/`). With no docs folder, or two candidates, put it in the question below with `doc/audits/` as the default.
+
+Then ask, in one `AskUserQuestion`, only what is still unknown:
 
 - the SSH alias of each environment, or "no access";
 - the start of the analysis window (default: the earliest of the advisory's first observed exploitation and the user's date; signature searches cover the whole log retention);
 - the report language;
-- the client's display name.
+- the client's display name;
+- the audit folder, when the repo does not settle it.
 
-**Done when:** every environment has an alias or a recorded "no access", and the window, language and client name are set.
+**Done when:** every environment has an alias or a recorded "no access", and the window, language, client name and audit folder are set.
 
 ## 2. Inventory
 
@@ -51,13 +56,13 @@ List the access events the logs cannot explain: admin logins from unknown IPs, S
 
 ## 6. Report
 
-Write the report by [`REPORT.md`](REPORT.md) into `doc/audits/` of the audited repo, render it with [`render.sh`](render.sh), and look at every page image it prints.
+Write the report by [`REPORT.md`](REPORT.md) into the audit folder, render it with [`render.sh`](render.sh), and look at every page image it prints.
 
 **Done when:** the PDF and its HTML source sit side by side in that folder, and every page is checked: no card split across pages, no heading alone at a page bottom, no near-empty last page.
 
 ## 7. Remember
 
-Write or update the project memory note `<project>-hosting-forensics`: host aliases per environment, log paths and retention, access level (sudo, WP-CLI path), and the quirks step 4 hit.
+Write or update the project memory note `<project>-hosting-forensics`: host aliases per environment, log paths and retention, access level (sudo, WP-CLI path), the audit folder, and the quirks step 4 hit.
 
 **Done when:** the note holds everything step 1 had to discover.
 
