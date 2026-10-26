@@ -7,8 +7,9 @@ Claude Code skills for working through GitHub issues with subagents: each issue 
 - `review-pr` — review existing PRs in subagents that fix what is wrong and comment their findings
 - `merge-dependabot` — batch the open Dependabot PRs into one branch and draft PR, applying minor and patch bumps and asking about each major
 - `cleanup-worktrees` — find a repo's stale worktrees and sibling checkout folders, prove each one's work has landed, and remove the ones you approve
+- `security-audit` — audit a site's repo and servers (read-only over SSH) for known vulnerabilities in its stack and signs of exploitation, then render the client PDF report and draft the email that carries it
 
-`fix-issues`, `implement-epic`, `review-pr` and `cleanup-worktrees` are user-invoked: run them as `/fix-issues 580 612`, `/implement-epic 42`, `/review-pr 701`, `/cleanup-worktrees`. `merge-dependabot` also triggers on its own when you ask to merge or batch Dependabot updates, or run it as `/merge-dependabot [branch]`.
+`fix-issues`, `implement-epic`, `review-pr` and `cleanup-worktrees` are user-invoked: run them as `/fix-issues 580 612`, `/implement-epic 42`, `/review-pr 701`, `/cleanup-worktrees`. `merge-dependabot` also triggers on its own when you ask to merge or batch Dependabot updates, or run it as `/merge-dependabot [branch]`. `security-audit` triggers when you ask for a security audit or whether a site is affected by a CVE, or run it as `/security-audit CVE-2026-109618 prod-host staging-host`.
 
 ## Install
 
