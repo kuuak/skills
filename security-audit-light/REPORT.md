@@ -38,6 +38,8 @@ An action the user gave no estimate for reads "sur devis" in the hours column an
 
 Two totals close the table, each the sum of the low ends and the sum of the high ends: the actions covering findings to fix, and all actions. The line below it explains ● and ○ and gives the validity from `ESTIMATES.md`.
 
+Without estimates (step 1), the table ends at the findings column: no hours, CHF, totals or validity line, and no "sur devis". The boxes, numbers and labels stay.
+
 ## Writing for the client
 
 - Plain words; a technical term gets a few words of explanation the first time.
@@ -52,7 +54,7 @@ Write it into `email-<report name>.md` in the audit folder, in the report's lang
 - **Subject:** "Check-up sécurité de <site>".
 - **Opening:** we built the site in <year>; software ages, so we ran a short external check-up; the report is attached.
 - **En bref:** the three counts, then each finding to fix in one line.
-- **Next step:** reply with the numbers of the actions they want; the total for the actions covering findings to fix; the maintenance plan as the alternative.
+- **Next step:** reply with the numbers of the actions they want; the total for the actions covering findings to fix, when the report carries estimates; the maintenance plan as the alternative.
 - **Signature:** the author's name from `git config user.name`, and the agency.
 
 ## Render and check

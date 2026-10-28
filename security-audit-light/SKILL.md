@@ -25,9 +25,10 @@ Then ask, in one `AskUserQuestion`, only what is still unknown:
 - the report language;
 - the client's display name;
 - the year the site was built, when no repo gives it;
+- whether the report carries **estimates** (yes by default; no when the work is already covered elsewhere, such as a client about to sign a redo of the site);
 - the audit folder, when the repo does not settle it.
 
-**Done when:** every site has a URL, access is an alias or a recorded "no access", and the language, client name, build year and audit folder are set.
+**Done when:** every site has a URL, access is an alias or a recorded "no access", and the language, client name, build year, estimates and audit folder are set.
 
 ## 2. Outside
 
@@ -45,7 +46,7 @@ List every component: CMS core, plugins, modules, themes, packages, PHP or Node,
 
 Sort every result into **OK**, **to watch** or **to fix** by [`RUBRIC.md`](RUBRIC.md). For a result the rubric does not name, apply its principles and tell the user which bucket you chose.
 
-Then give each finding to watch or fix an action from [`ESTIMATES.md`](ESTIMATES.md); one action may cover several findings. When no action fits, ask the user for an estimate and add the action to the catalog. When the user declines to give one, the action goes in the report "sur devis", outside the totals.
+Then give each finding to watch or fix an action from [`ESTIMATES.md`](ESTIMATES.md); one action may cover several findings. When no action fits, ask the user for an estimate and add the action to the catalog. When the user declines to give one, the action goes in the report "sur devis", outside the totals. A report without estimates still takes its action labels from the catalog and skips the hours.
 
 **Done when:** every result has a bucket, every finding to watch or fix has an action, and every estimate comes from `ESTIMATES.md`.
 
