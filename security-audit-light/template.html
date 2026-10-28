@@ -5,244 +5,252 @@
 <title>Check-up sécurité — [Client]</title>
 <style>
   :root {
-    --ink: #1b2430;
-    --muted: #5b6676;
-    --line: #dde2e8;
-    --soft: #f4f6f9;
-    --accent: #12406b;
-    --ok: #1e7d4f;
-    --ok-bg: #e8f5ee;
-    --warn: #9a5b00;
-    --warn-bg: #fdf3e2;
-    --bad: #b42318;
-    --bad-bg: #fdecea;
+    --ink: #161616;
+    --muted: #8a8a8a;
+    --line: #d9d9d9;
+    --dark: #161616;
+    --dark-muted: #9a9a9a;
+    --dark-line: #3a3a3a;
+    --mono: "Liberation Mono", "Courier New", Courier, monospace;
   }
   @page {
     size: A4;
-    margin: 18mm 17mm 20mm 17mm;
-    @bottom-left {
-      content: "Check-up sécurité — [Client] · Confidentiel";
-      font: 7.5pt "Helvetica Neue", Helvetica, Arial, sans-serif;
-      color: #8a94a3;
-    }
-    @bottom-right {
-      content: "Page " counter(page) " / " counter(pages);
-      font: 7.5pt "Helvetica Neue", Helvetica, Arial, sans-serif;
-      color: #8a94a3;
-    }
+    margin: 22mm 17mm 20mm 17mm;
+    @top-left { content: "[site], check-up sécurité"; font: 6.8pt var(--mono); color: var(--muted); vertical-align: bottom; padding-bottom: 2.5mm; border-bottom: .4pt solid var(--line); }
+    @top-center { content: ""; vertical-align: bottom; padding-bottom: 2.5mm; border-bottom: .4pt solid var(--line); }
+    @top-right { content: "[Mois aaaa]"; font: 6.8pt var(--mono); color: var(--muted); vertical-align: bottom; padding-bottom: 2.5mm; border-bottom: .4pt solid var(--line); }
+    @bottom-left { content: "superhuit.ch"; font: 6.8pt var(--mono); color: var(--muted); vertical-align: top; padding-top: 2.5mm; border-top: .4pt solid var(--line); }
+    @bottom-center { content: ""; vertical-align: top; padding-top: 2.5mm; border-top: .4pt solid var(--line); }
+    @bottom-right { content: counter(page) " / " counter(pages); font: 6.8pt var(--mono); color: var(--muted); vertical-align: top; padding-top: 2.5mm; border-top: .4pt solid var(--line); }
   }
-  @page :first {
-    @bottom-left { content: none; }
+  @page cover { margin: 0; }
+  @page dark {
+    background: var(--dark);
+    @top-left { border-bottom-color: var(--dark-line); }
+    @top-center { border-bottom-color: var(--dark-line); }
+    @top-right { border-bottom-color: var(--dark-line); }
+    @bottom-left { border-top-color: var(--dark-line); }
+    @bottom-center { border-top-color: var(--dark-line); }
+    @bottom-right { border-top-color: var(--dark-line); }
   }
   * { box-sizing: border-box; }
   html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   body {
     margin: 0;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-size: 9.6pt;
+    font-size: 8.8pt;
     line-height: 1.5;
     color: var(--ink);
-    background: #fff;
   }
-  /* Cover header */
+  p { margin: 0 0 2.4mm; }
+  ul { margin: 0 0 3mm; padding-left: 4.5mm; }
+  li { margin: 0 0 1.2mm; }
+  .mono { font-family: var(--mono); font-size: 6.8pt; color: var(--muted); }
+  .bar { width: 62mm; height: 2.6pt; background: currentColor; margin: 7mm 0 4mm; }
+
+  /* Cover: one full dark page */
   .cover {
-    border-top: 5px solid var(--accent);
-    padding-top: 14mm;
-    margin-bottom: 9mm;
-  }
-  .kicker {
-    font-size: 8pt;
-    letter-spacing: .14em;
-    text-transform: uppercase;
-    color: var(--accent);
-    font-weight: 700;
-    margin: 0 0 3mm;
-  }
-  .cover h1 {
-    font-size: 22pt;
-    line-height: 1.15;
-    margin: 0 0 2.5mm;
-    letter-spacing: -.01em;
-  }
-  .cover .sub {
-    font-size: 11pt;
-    color: var(--muted);
-    margin: 0 0 8mm;
-  }
-  .meta {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    border: 1px solid var(--line);
-    border-radius: 6px;
+    page: cover;
+    position: relative;
+    width: 210mm; height: 297mm;
+    background: var(--dark);
+    color: #fff;
     overflow: hidden;
   }
-  .meta div { padding: 3mm 4mm; border-right: 1px solid var(--line); }
-  .meta div:last-child { border-right: 0; }
-  .meta span { display: block; font-size: 7.2pt; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
-  .meta strong { font-size: 9.4pt; }
-  .meta .conf strong { color: var(--bad); }
-
-  .badge { display: inline-block; padding: .4mm 2.2mm; border-radius: 10px; font-size: 7.8pt; font-weight: 700; white-space: nowrap; }
-  .b-ok { background: var(--ok-bg); color: var(--ok); }
-  .b-warn { background: var(--warn-bg); color: var(--warn); }
-  .b-bad { background: var(--bad-bg); color: var(--bad); }
-  .b-info { background: #e7eef6; color: var(--accent); }
-
-  /* Summary: verdict and counts */
-  .verdict { display: flex; align-items: center; gap: 3mm; margin: 0 0 4mm; font-size: 10pt; }
-  .verdict .badge { font-size: 9.6pt; padding: 1mm 3.5mm; }
-  .counts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4mm; margin: 0 0 5mm; break-inside: avoid; }
-  .count { border-radius: 6px; padding: 3.5mm 4.5mm; }
-  .count strong { display: block; font-size: 22pt; line-height: 1.1; }
-  .count span { font-size: 8.6pt; font-weight: 700; }
-  .count.fix { background: var(--bad-bg); color: var(--bad); }
-  .count.watch { background: var(--warn-bg); color: var(--warn); }
-  .count.ok { background: var(--ok-bg); color: var(--ok); }
-
-  /* Finding cards */
-  .finding {
-    border: 1px solid var(--line);
-    border-left: 4px solid var(--bad);
-    border-radius: 6px;
-    padding: 3.5mm 4.5mm;
-    margin: 0 0 3.5mm;
-    break-inside: avoid;
+  .cover .brand { position: absolute; top: 18mm; left: 18mm; border: 1pt solid #fff; padding: 2.4mm 7mm; font-size: 9pt; letter-spacing: .02em; }
+  .cover .kind { position: absolute; top: 21mm; right: 18mm; font: 6.8pt var(--mono); color: var(--dark-muted); }
+  .cover .side {
+    position: absolute; left: 7mm; bottom: 60mm;
+    transform: rotate(-90deg); transform-origin: left top;
+    font: 6pt var(--mono); letter-spacing: .14em; color: var(--dark-muted); white-space: nowrap; word-spacing: 6mm;
   }
-  .finding.watch { border-left-color: var(--warn); }
-  .finding h3 { margin: 0 0 2mm; font-size: 10.4pt; }
-  .finding h3 .num { color: var(--bad); margin-right: 1.5mm; }
-  .finding.watch h3 .num { color: var(--warn); }
-  .finding dl { display: grid; grid-template-columns: 17mm 1fr; gap: 1.2mm 3mm; margin: 0; font-size: 8.9pt; }
-  .finding dt { color: var(--muted); font-weight: 700; }
-  .finding dd { margin: 0; }
+  .cover .name { position: absolute; top: 74mm; left: 19mm; right: 18mm; }
+  .cover h1 { font-size: 66pt; font-weight: 400; line-height: 1; margin: 0; letter-spacing: -.02em; }
+  .cover .client { font-size: 13pt; color: var(--dark-muted); margin: 1.5mm 0 0; }
+  .cover .topics { position: absolute; top: 140mm; left: 19mm; right: 18mm; }
+  .cover .topics div { font-size: 24pt; line-height: 1.22; }
+  .cover .topics sup { font-size: 9pt; margin-left: 1mm; vertical-align: 11pt; }
+  .cover .topics p { font-size: 8.4pt; color: var(--dark-muted); margin: 7mm 0 0; max-width: 140mm; }
+  .cover .bottom { position: absolute; left: 18mm; right: 18mm; bottom: 14mm; }
+  .cover .bottom .bar { margin: 0 0 8mm; background: #fff; }
+  .cover .bottom div { display: flex; justify-content: space-between; font: 6.8pt var(--mono); color: var(--dark-muted); }
 
-  h2 {
-    font-size: 14pt;
-    color: var(--accent);
-    margin: 9mm 0 3mm;
-    padding-bottom: 1.5mm;
-    border-bottom: 1px solid var(--line);
-    break-after: avoid;
-  }
-  h3 { font-size: 10.8pt; margin: 6mm 0 2mm; break-after: avoid; }
-  p { margin: 0 0 2.6mm; }
-  ul, ol { margin: 0 0 3mm; padding-left: 5.5mm; }
-  li { margin: 0 0 1.3mm; }
-  a { color: var(--accent); text-decoration: none; }
-  table { width: 100%; border-collapse: collapse; margin: 2mm 0 4mm; font-size: 8.7pt; }
+  /* Sections */
+  section { break-before: page; }
+  section.dark { page: dark; color: #fff; }
+  .head { display: flex; justify-content: space-between; align-items: flex-end; gap: 6mm; margin: 4mm 0 6mm; break-after: avoid; }
+  h2 { font-size: 34pt; font-weight: 400; line-height: 1.05; margin: 0; letter-spacing: -.015em; }
+  h2 sup { font-size: 9pt; margin-left: 1mm; vertical-align: 15pt; letter-spacing: 0; }
+  .prio { font-size: 7.6pt; white-space: nowrap; padding-bottom: 1.5mm; }
+  .prio i { display: inline-block; width: 2.5mm; height: 2.5mm; border: .8pt solid currentColor; border-radius: 50%; margin-right: .6mm; vertical-align: -.3mm; }
+  .prio i.on { background: currentColor; }
+  .prio span { margin-left: 1.5mm; }
+  .dark .prio span, .dark .muted { color: var(--dark-muted); }
+  .lead { font-size: 14pt; line-height: 1.38; margin: 0 0 6mm; }
+  h3 { font-size: 11pt; font-weight: 400; margin: 6mm 0 2mm; break-after: avoid; }
+  .label { font-size: 8pt; font-weight: 500; margin: 0 0 .8mm; }
+  .muted { color: var(--muted); }
+  .body p { text-align: justify; hyphens: auto; }
+
+  /* Summary figures */
+  .figures { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6mm; margin: 2mm 0 2mm; }
+  .figures strong { display: block; font-size: 58pt; font-weight: 400; line-height: 1; letter-spacing: -.02em; }
+  .figures span { display: block; font-size: 8pt; color: var(--muted); margin-top: 1.5mm; }
+  .figures .quiet strong { color: #cfcfcf; }
+
+  /* Finding cards, two per row */
+  .findings { display: grid; grid-template-columns: 1fr 1fr; gap: 7mm 8mm; }
+  .finding { border-top: .6pt solid var(--line); padding-top: 3mm; break-inside: avoid; }
+  .dark .finding { border-top-color: var(--dark-line); }
+  .finding .num { font-size: 26pt; line-height: 1; letter-spacing: -.02em; }
+  .finding h4 { font-size: 10.5pt; font-weight: 400; line-height: 1.3; margin: 1.5mm 0 3mm; }
+  .finding .label { margin-top: 2mm; }
+  .finding p { font-size: 8.4pt; margin: 0; }
+  .finding .act { font: 6.8pt var(--mono); color: var(--muted); margin-top: 3mm; }
+  .dark .finding .act { color: var(--dark-muted); }
+  /* To watch: two per row, up to ten on one page */
+  .findings.compact { grid-template-columns: 1fr 1fr; gap: 3.5mm 8mm; }
+  .compact .finding { padding-top: 1.8mm; }
+  .compact .finding .num { font-size: 15pt; }
+  .compact .finding h4 { font-size: 9pt; margin: .8mm 0 1.4mm; }
+  .compact .finding .label { font-size: 7.2pt; margin-top: 1.1mm; }
+  .compact .finding p { font-size: 7.6pt; line-height: 1.4; }
+  .compact .finding .act { margin-top: 1.2mm; }
+
+  /* Tables */
+  table { width: 100%; border-collapse: collapse; margin: 0 0 4mm; font-size: 8.4pt; }
   thead { display: table-header-group; }
-  th {
-    text-align: left;
-    background: var(--soft);
-    color: var(--muted);
-    font-size: 7.6pt;
-    text-transform: uppercase;
-    letter-spacing: .06em;
-    font-weight: 700;
-    padding: 2mm 2.5mm;
-    border-bottom: 1px solid var(--line);
-  }
-  td { padding: 2mm 2.5mm; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { text-align: left; font: 6.8pt var(--mono); color: var(--muted); font-weight: 400; padding: 0 2mm 2mm 0; border-bottom: .6pt solid var(--ink); }
+  td { padding: 2mm 2mm 2mm 0; border-bottom: .4pt solid var(--line); vertical-align: top; }
   tr { break-inside: avoid; }
-  td.nowrap, th.nowrap { white-space: nowrap; }
-  td.num, th.num { text-align: right; white-space: nowrap; }
-  .lead { font-size: 10.4pt; }
-  .note {
-    background: var(--soft);
-    border-left: 3px solid var(--accent);
-    padding: 3mm 4mm;
-    margin: 3mm 0 4mm;
-    font-size: 8.9pt;
-    break-inside: avoid;
-  }
-
-  /* Order table */
+  td.num, th.num { text-align: right; white-space: nowrap; padding-right: 0; }
+  td.id { font-family: var(--mono); font-size: 8pt; }
   table.order td { vertical-align: middle; }
-  .box {
-    display: inline-block;
-    width: 4.2mm; height: 4.2mm;
-    border: 1.3px solid #7d8796; border-radius: 1mm;
-  }
-  .dot { display: inline-block; width: 2.2mm; height: 2.2mm; border-radius: 50%; margin-right: 1mm; }
-  .dot.fix { background: var(--bad); }
-  .dot.watch { background: var(--warn); }
-  table.order tr.total td { background: var(--soft); font-weight: 700; border-bottom: 0; }
-  table.order tr.total + tr.total td { border-top: 1px solid var(--line); }
-  .small { font-size: 8.4pt; color: var(--muted); }
+  .box { display: inline-block; width: 4mm; height: 4mm; border: .8pt solid var(--ink); }
+  .pt { white-space: nowrap; }
+  table.order tr.total td { border-bottom: 0; border-top: .6pt solid var(--ink); font-weight: 700; }
+  table.order tr.total + tr.total td { border-top: .4pt solid var(--line); }
+
+  /* Closing: one full dark page */
+  .closing { page: dark; color: #fff; }
+  .closing h2 { font-size: 60pt; margin-top: 30mm; }
+  .closing .bar { background: #fff; margin: 4mm 0 10mm; }
+  .closing p { max-width: 150mm; }
+  .closing .contact { font-size: 17pt; line-height: 1.3; margin: 12mm 0 0; }
+  .closing .contact + .contact { margin-top: 6mm; }
+  .closing .mono { color: var(--dark-muted); margin-top: 12mm; }
 </style>
 </head>
 <body>
 
 <!-- Every component of the report appears once below; repeat findings, rows and sections as needed. -->
 
-<section class="cover">
-  <p class="kicker">Check-up sécurité</p>
-  <h1>[site 1] et [site 2]</h1>
-  <p class="sub">[Client]</p>
-  <div class="meta">
-    <div><span>Date</span><strong>[dd.mm.yyyy]</strong></div>
-    <div><span>Établi par</span><strong>[Auteur], [agence]</strong></div>
-    <div><span>Périmètre</span><strong>Analyse externe</strong></div>
-    <div class="conf"><span>Classification</span><strong>Confidentiel</strong></div>
+<div class="cover">
+  <div class="brand">SUPERHUIT</div>
+  <div class="kind">Check-up sécurité · Confidentiel</div>
+  <div class="side">CHECK-UP SÉCURITÉ [MOIS AAAA] SUPERHUIT.CH</div>
+  <div class="name">
+    <h1>[site]</h1>
+    <p class="client">[Client]</p>
+  </div>
+  <div class="topics">
+    <div>À corriger<sup>[n]</sup></div>
+    <div>À surveiller<sup>[n]</sup></div>
+    <div>En ordre<sup>[n]</sup></div>
+    <p>Un regard sur la sécurité du site, depuis l'extérieur[ et sur le serveur en lecture seule]. Les exposants indiquent le nombre de points par catégorie.</p>
+  </div>
+  <div class="bottom">
+    <div class="bar"></div>
+    <div><span>[site]</span><span>[Mois aaaa]</span></div>
+  </div>
+</div>
+
+<section style="break-before: auto">
+  <div class="head"><h2>Résumé</h2><div class="prio"><i class="on"></i><i class="on"></i><i></i><span>À entretenir</span></div></div>
+  <p class="lead">[Verdict en une ou deux phrases, dans les mots du client.]</p>
+  <div class="body">
+    <p>[Les points à corriger en une phrase ; ce qui a changé depuis le dernier check-up.]</p>
+  </div>
+  <div class="figures" style="margin-top:8mm">
+    <div><strong>[n]</strong><span>points à corriger</span></div>
+    <div><strong>[n]</strong><span>points à surveiller</span></div>
+    <div class="quiet"><strong>[n]</strong><span>contrôles en ordre</span></div>
+  </div>
+  <div class="bar"></div>
+  <p class="mono">Établi le [dd.mm.yyyy] par [Auteur], superhuit</p>
+</section>
+
+<section class="dark">
+  <div class="head"><h2>À corriger<sup>[n]</sup></h2><div class="prio"><i class="on"></i><i class="on"></i><i class="on"></i><span>Priorité haute</span></div></div>
+  <div class="findings">
+    <div class="finding">
+      <div class="num">1</div>
+      <h4>[Titre du constat]</h4>
+      <p class="label">Ce que nous avons constaté</p>
+      <p>[Ce que nous avons vu, avec le chiffre qui le rend concret.]</p>
+      <p class="label">Ce que cela implique</p>
+      <p>[Ce que cela peut coûter au client.]</p>
+      <div class="act">Action A1</div>
+    </div>
   </div>
 </section>
 
-<h2 style="margin-top:0">Résumé</h2>
-<p class="verdict">État général : <span class="badge b-warn">À entretenir</span></p>
-<div class="counts">
-  <div class="count fix"><strong>[n]</strong><span>À corriger</span></div>
-  <div class="count watch"><strong>[n]</strong><span>À surveiller</span></div>
-  <div class="count ok"><strong>[n]</strong><span>En ordre</span></div>
-</div>
-<p class="lead">[Verdict en deux ou trois phrases, dans les mots du client.]</p>
+<section>
+  <div class="head"><h2>À surveiller<sup>[n]</sup></h2><div class="prio"><i class="on"></i><i class="on"></i><i></i><span class="muted">Priorité moyenne</span></div></div>
+  <div class="findings compact">
+    <div class="finding">
+      <div class="num">2</div>
+      <h4>[Titre du constat]</h4>
+      <p class="label">Ce que nous avons constaté</p>
+      <p>[Une phrase courte.]</p>
+      <p class="label">Ce que cela implique</p>
+      <p>[Une phrase courte.]</p>
+      <div class="act">Action A2</div>
+    </div>
+  </div>
+</section>
 
-<h2>À corriger</h2>
-<div class="finding">
-  <h3><span class="num">1</span>[Titre du constat]</h3>
-  <dl>
-    <dt>Constat</dt><dd>[Ce que nous avons vu, avec le chiffre qui le rend concret.]</dd>
-    <dt>Risque</dt><dd>[Ce que cela peut coûter au client.]</dd>
-    <dt>Action</dt><dd>A1</dd>
-  </dl>
-</div>
+<section>
+  <div class="head"><h2>En ordre<sup>[n]</sup></h2></div>
+  <table>
+    <thead><tr><th style="width:42%">Contrôle</th><th>Résultat</th></tr></thead>
+    <tbody>
+      <tr><td>[Contrôle en mots simples]</td><td>[Résultat]</td></tr>
+    </tbody>
+  </table>
+</section>
 
-<h2>À surveiller</h2>
-<div class="finding watch">
-  <h3><span class="num">2</span>[Titre du constat]</h3>
-  <dl>
-    <dt>Constat</dt><dd>[Ce que nous avons vu.]</dd>
-    <dt>Risque</dt><dd>[Ce que cela peut coûter au client.]</dd>
-    <dt>Action</dt><dd>A2</dd>
-  </dl>
-</div>
+<section>
+  <div class="head"><h2>Actions proposées</h2></div>
+  <p class="lead">Cochez les actions souhaitées et renvoyez ce document, ou répondez à notre e-mail avec leurs numéros (par exemple A1, A3).</p>
+  <table class="order">
+    <thead><tr><th style="width:7%"></th><th style="width:7%">N°</th><th>Action</th><th style="width:15%">Points</th><th class="num" style="width:12%">Heures</th></tr></thead>
+    <tbody>
+      <tr><td><span class="box"></span></td><td class="id">A1</td><td>[Libellé de ESTIMATES.md]</td><td class="pt">● 1 &nbsp;○ 3</td><td class="num">[x–y] h</td></tr>
+      <tr><td><span class="box"></span></td><td class="id">A2</td><td>[Libellé de ESTIMATES.md]</td><td class="pt">○ 2</td><td class="num">[x–y] h</td></tr>
+      <tr class="total"><td></td><td colspan="3">Actions sur les points à corriger</td><td class="num">[x–y] h</td></tr>
+      <tr class="total"><td></td><td colspan="3">Toutes les actions</td><td class="num">[x–y] h</td></tr>
+    </tbody>
+  </table>
+  <p class="muted">● point à corriger &nbsp; ○ point à surveiller. Estimations valables [n] jours à compter de la date du rapport. Chaque action comprend une sauvegarde complète avant l'intervention et un contrôle du site après.</p>
 
-<h2>En ordre</h2>
-<table>
-  <thead><tr><th style="width:42%">Contrôle</th><th>Résultat</th></tr></thead>
-  <tbody>
-    <tr><td>[Contrôle en mots simples]</td><td>[Résultat]</td></tr>
-  </tbody>
-</table>
+  <h3>Périmètre et limites</h3>
+  <div class="body">
+    <p>L'analyse a été menée le [dd.mm.yyyy] depuis l'extérieur, comme le ferait un visiteur : rien n'a été modifié sur le site ni sur ses serveurs, et aucun essai de connexion n'a été fait.</p>
+  </div>
+  <ul>
+    <li>[Chaque contrôle non vérifiable, et pourquoi.]</li>
+  </ul>
+</section>
 
-<h2>Actions proposées</h2>
-<table class="order">
-  <thead><tr><th style="width:7%"></th><th style="width:7%">N°</th><th>Action</th><th style="width:12%">Points</th><th class="num" style="width:11%">Heures</th><th class="num" style="width:14%">CHF</th></tr></thead>
-  <tbody>
-    <tr><td><span class="box"></span></td><td><strong>A1</strong></td><td>[Libellé de ESTIMATES.md]</td><td class="nowrap"><span class="dot fix"></span>1</td><td class="num">[x–y] h</td><td class="num">[x–y]</td></tr>
-    <tr><td><span class="box"></span></td><td><strong>A2</strong></td><td>[Libellé de ESTIMATES.md]</td><td class="nowrap"><span class="dot watch"></span>2</td><td class="num">[x–y] h</td><td class="num">[x–y]</td></tr>
-    <tr class="total"><td></td><td colspan="3">Actions sur les points à corriger</td><td class="num">[x–y] h</td><td class="num">[x–y]</td></tr>
-    <tr class="total"><td></td><td colspan="3">Toutes les actions</td><td class="num">[x–y] h</td><td class="num">[x–y]</td></tr>
-  </tbody>
-</table>
-<p>Pour commander, cochez les actions souhaitées et renvoyez ce document, ou répondez à notre e-mail avec leurs numéros (par exemple A1, A3).</p>
-<p class="small">Estimations valables [n] jours à compter de la date du rapport. Chaque action comprend une sauvegarde complète avant l'intervention et un contrôle du site après.</p>
-<div class="note"><strong>Plan de maintenance.</strong> [L'offre de maintenance de ESTIMATES.md, présentée comme l'alternative qui couvre ces points dans la durée.]</div>
-
-<h2>Périmètre et limites</h2>
-<p>L'analyse a été menée le [dd.mm.yyyy] depuis l'extérieur, comme le ferait un visiteur : rien n'a été modifié sur le site ni sur ses serveurs.</p>
-<ul>
-  <li>[Chaque contrôle non vérifiable, et pourquoi.]</li>
-</ul>
+<section class="closing">
+  <h2>Parlons-en.</h2>
+  <div class="bar"></div>
+  <p>Plutôt que des interventions ponctuelles, notre plan de maintenance couvre ces points dans la durée : [plan et prix de ESTIMATES.md]. Nous vous en présentons volontiers les conditions, ou réalisons les actions que vous aurez cochées.</p>
+  <p class="contact">+41 (0) 21 652 18 18<br>hello@superhuit.ch</p>
+  <p class="contact">Rue des Terreaux 7,<br>1003 Lausanne,<br>Suisse</p>
+  <p class="mono">© [aaaa] Superhuit</p>
+</section>
 
 </body>
 </html>
