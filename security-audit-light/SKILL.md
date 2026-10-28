@@ -1,7 +1,7 @@
 ---
 name: security-audit-light
 description: Run a passive security check-up of a site we built but no longer maintain, and deliver a client report sorting findings into OK, to watch and to fix, with estimated actions the client ticks. Use when the user asks for a light audit or security check-up, or a report to offer maintenance to a past client.
-argument-hint: [site URLs] [ssh host]
+argument-hint: [site URLs] [ssh host] [--no-estimates]
 ---
 
 # security-audit-light
@@ -25,7 +25,7 @@ Then ask, in one `AskUserQuestion`, only what is still unknown:
 - the report language;
 - the client's display name;
 - the year the site was built, when no repo gives it;
-- whether the report carries **estimates** (yes by default; no when the work is already covered elsewhere, such as a client about to sign a redo of the site);
+- whether the report carries **estimates** (yes by default; no when the work is already covered elsewhere, such as a prospect or a client about to sign a redo of the site), unless `--no-estimates` was passed;
 - the audit folder, when the repo does not settle it.
 
 **Done when:** every site has a URL, access is an alias or a recorded "no access", and the language, client name, build year, estimates and audit folder are set.
