@@ -1,0 +1,61 @@
+---
+name: security-audit-light
+description: Run a passive security check-up of a site we built but no longer maintain, and deliver a client report sorting findings into OK, to watch and to fix, with estimated actions the client ticks. Use when the user asks for a light audit or security check-up, or a report to offer maintenance to a past client.
+argument-hint: [site URLs] [ssh host]
+---
+
+# security-audit-light
+
+A **check-up** of a site the agency built and no longer maintains: what is fine, what to watch, what to fix, and what each fix costs. The client reads the report as an offer: they tick the actions they want and reply with their numbers. The deliverable is a client PDF built from [`template.html`](template.html).
+
+Every probe is **passive**: a GET or HEAD request of the kind a visitor's browser sends, a few dozen per site in all. Login attempts, form submissions and scanners belong to a signed engagement. When SSH still works, servers stay read-only, as in [`security-audit`](../security-audit/SKILL.md).
+
+A sign of **compromise** turns the check-up into an incident. When a check listed under [`RUBRIC.md`](RUBRIC.md#compromise) fires, stop, show the user what you saw, and recommend a full `/security-audit` in place of this report.
+
+## 1. Scope
+
+Read the project memory (the `<project>-hosting-forensics` note, when an earlier audit wrote one), `CLAUDE.md`, deploy docs and `~/.ssh/config`. Pick the audit folder by the rule in step 1 of [`security-audit`](../security-audit/SKILL.md#1-scope), and read any earlier check-up report in it: the new summary says what changed since.
+
+Then ask, in one `AskUserQuestion`, only what is still unknown:
+
+- the production URL of each site;
+- the SSH alias, or "no access";
+- the report language;
+- the client's display name;
+- the audit folder, when the repo does not settle it.
+
+**Done when:** every site has a URL, access is an alias or a recorded "no access", and the language, client name and audit folder are set.
+
+## 2. Outside
+
+Run every check in [`CHECKS.md`](CHECKS.md#outside) against every site.
+
+**Done when:** every check has a result, or a stated reason it could not run, for every site.
+
+## 3. Stack
+
+List every component: CMS core, plugins, themes, packages, PHP or Node, web server. Take versions from the outside first, since they show production; then from the repo's lock files, which show the last delivery; then from the server when SSH works ([`CHECKS.md`](CHECKS.md#server)). Production may have moved since the last delivery: when the sources disagree, record both. Then check each component as in [`CHECKS.md`](CHECKS.md#stack).
+
+**Done when:** every component has a version and its source, its open vulnerabilities, and whether its branch still gets security fixes.
+
+## 4. Classify
+
+Sort every result into **OK**, **to watch** or **to fix** by [`RUBRIC.md`](RUBRIC.md). For a result the rubric does not name, apply its principles and tell the user which bucket you chose.
+
+Then give each finding to watch or fix an action from [`ESTIMATES.md`](ESTIMATES.md); one action may cover several findings. When no action fits, ask the user for an estimate and add the action to the catalog.
+
+**Done when:** every result has a bucket, every finding to watch or fix has an action, and every estimate comes from `ESTIMATES.md`.
+
+## 5. Report
+
+Write the report by [`REPORT.md`](REPORT.md) into the audit folder, render it with [`render.sh`](../security-audit/render.sh), and look at every page image it prints.
+
+**Done when:** the PDF and its HTML source sit side by side in the audit folder, and every page is checked: no finding or table row split across pages, no heading alone at a page bottom, no near-empty last page.
+
+## 6. Deliver
+
+Draft the email by [`REPORT.md`](REPORT.md#email). When the user reports it sent, record it as in [`security-audit`'s delivery](../security-audit/DELIVERY.md#clickup-record), with the task named "Check-up sécurité <site> – <dd.mm.yyyy>".
+
+Write or update the project memory note `<project>-hosting-forensics`: site URLs, access, audit folder, and the date of this check-up.
+
+After a correction to the report, update the HTML, re-render, re-check the pages, and keep the email draft consistent with it.
