@@ -34,11 +34,11 @@ A card to fix carries the full detail. A card to watch keeps its title and each 
 
 One row per action, numbered `A1`, `A2`, …: actions covering a finding to fix first, then the rest. Columns: an empty box, the number, the label from [`ESTIMATES.md`](ESTIMATES.md), the findings it covers (● before findings to fix, ○ before findings to watch), and the hours range. With the hourly rate set, add a CHF column after the hours (hours × rate, rounded to the nearest 10). Every box stays empty: the client ticks.
 
-An action the user gave no estimate for reads "sur devis" in the hours column and stays out of the sums; a total that leaves one out says so ("5–9 h + A1 sur devis").
+An action outside the agency's stacks, or one the user gave no estimate for, reads "à discuter" in the hours column ("to be discussed" in English) and stays out of the sums; a total that leaves one out says so ("5–9 h + A1 à discuter").
 
 Two totals close the table, each the sum of the low ends and the sum of the high ends: the actions covering findings to fix, and all actions. The line below it explains ● and ○ and gives the validity from `ESTIMATES.md`.
 
-Without estimates (step 1), the table ends at the findings column: no hours, CHF, totals or validity line, and no "sur devis". The boxes, numbers and labels stay.
+Without estimates (step 1), the table ends at the findings column: no hours, CHF, totals or validity line, and no "à discuter". The boxes, numbers and labels stay.
 
 ## Writing for the client
 

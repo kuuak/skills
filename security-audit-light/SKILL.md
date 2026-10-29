@@ -46,7 +46,7 @@ List every component: CMS core, plugins, modules, themes, packages, PHP or Node,
 
 Sort every result into **OK**, **to watch** or **to fix** by [`RUBRIC.md`](RUBRIC.md). For a result the rubric does not name, apply its principles and tell the user which bucket you chose.
 
-Then give each finding to watch or fix an action from [`ESTIMATES.md`](ESTIMATES.md); one action may cover several findings. When no action fits, ask the user for an estimate and add the action to the catalog. When the user declines to give one, the action goes in the report "sur devis", outside the totals. A report without estimates still takes its action labels from the catalog and skips the hours.
+Then give each finding to watch or fix an action from [`ESTIMATES.md`](ESTIMATES.md); one action may cover several findings. When no action fits, ask the user for an estimate and add the action to the catalog. When the user declines to give one, or the action is on a stack outside the agency's (see `ESTIMATES.md`), the action goes in the report "à discuter", outside the totals. A report without estimates still takes its action labels from the catalog and skips the hours.
 
 **Done when:** every result has a bucket, every finding to watch or fix has an action, and every estimate comes from `ESTIMATES.md`.
 

@@ -12,6 +12,7 @@ The catalog of actions the check-up offers, for step 4 of [`SKILL.md`](SKILL.md)
 ## Reading the ranges
 
 - A range covers a typical site; add the extra lines that apply.
+- **Our stacks:** the agency estimates WordPress and Next.js/React work. An action on any other stack (Drupal, another CMS or framework) reads "à discuter" ("to be discussed") in the hours column and stays out of the sums.
 - **Headless** (a WordPress backend behind a Next.js or other frontend): each upgrade is tested against the frontend too, so add the headless line where an action has one.
 - **Order:** plugin fixes that need a newer core come after the core upgrade; say so under the order table when it applies.
 - **Labels in parentheses** list examples: in the report, keep only the items this site's findings name.
@@ -24,17 +25,17 @@ The label is the report's wording in French; translate it for another language.
 
 | Key | Label | Hours | Fixes |
 |---|---|---|---|
-| `wp-updates` | Mise à jour de WordPress, des extensions et du thème, avec tests | 1.5–3 (up to 10 pending updates; +1 per further 10; +1–2 when plugins come through Composer; +1–2 headless) | pending updates, known vulnerabilities fixed by an update |
-| `drupal-updates` | Mise à jour de Drupal (cœur et modules), avec tests | 2–4 (+1–2 for a minor core release, such as 11.3 → 11.4) | pending updates, security releases |
+| `wp-updates` | Mise à jour de WordPress, des extensions et du thème, avec tests | 1–2 (up to 10 pending updates; +1 per further 10; +1 when plugins come through Composer; +2 headless) | pending updates, known vulnerabilities fixed by an update |
+| `drupal-updates` | Mise à jour de Drupal (cœur et modules), avec tests | à discuter | pending updates, security releases |
 | `wp-core-major` | Passage de WordPress à la version majeure actuelle | 3–6 (+2 headless) | core two or more majors behind, plugin fixes that need a newer core |
-| `core-upgrade` | Passage du CMS à une version majeure maintenue | 4–12 (+2 headless) | a non-WordPress core near or past end of support (such as Drupal 10 → 11) |
+| `core-upgrade` | Passage du CMS à une version majeure maintenue | à discuter | a non-WordPress core near or past end of support (such as Drupal 10 → 11) |
 | `plugin-major` | Mise à jour majeure d'une extension ou d'un module (changements incompatibles) | 2–4 each | a fix only available in a new major version |
 | `plugin-replace` | Remplacement d'une extension ou d'un module abandonné | 1–2 each for a single-purpose plugin; 2–6 when it shapes the front end | closed, unsupported or unmaintained component |
 | `fork-sync` | Mise à niveau d'une extension adaptée sur sa version d'origine | 2–4 each | a fork pinned behind a living source |
 | `fork-adopt` | Reprise d'une extension abandonnée par son auteur (maintenance de notre copie) | 2–4 each | a fork whose source is dead |
-| `headless-api` | Mise à jour de la couche API du site (WPGraphQL et ses extensions) et des requêtes du frontend | 6–12 | WPGraphQL or its add-ons majors behind, archived add-ons |
+| `headless-api` | Mise à jour de la couche API du site (WPGraphQL et ses extensions) et des requêtes du frontend | 4–8 | WPGraphQL or its add-ons majors behind, archived add-ons |
 | `unpatched-vuln` | Mesure de protection contre une faille sans correctif (désactivation, règle de pare-feu) et suivi du correctif | 0.5–2 | a vulnerability with no fixed release |
-| `php-upgrade` | Passage à une version de PHP maintenue | 1–3 where PHP is a hosting-panel setting (+1 per further app on the same server); 3–8 on a self-managed server or Docker image | PHP branch past or near end of support |
+| `php-upgrade` | Passage à une version de PHP maintenue | 1–3 where PHP is a hosting-panel setting (+1 per further app on the same server); 3–6 on a self-managed server or Docker image | PHP branch past or near end of support |
 | `next-upgrade` | Passage de Next.js à une version maintenue | 4–8 (+4–8 when it brings React 19 or an App Router migration) | Next.js major past end of support |
 | `js-deps` | Mise à jour des dépendances du frontend (Node, npm) | 2–6 | Node branch or npm packages with vulnerabilities, within the same framework major |
 
