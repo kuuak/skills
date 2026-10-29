@@ -5,268 +5,298 @@
 <title>Rapport d'incident — [CVE ids] — [Client]</title>
 <style>
   :root {
-    --ink: #1b2430;
-    --muted: #5b6676;
-    --line: #dde2e8;
-    --soft: #f4f6f9;
-    --accent: #12406b;
-    --ok: #1e7d4f;
-    --ok-bg: #e8f5ee;
-    --warn: #9a5b00;
-    --warn-bg: #fdf3e2;
-    --bad: #b42318;
-    --bad-bg: #fdecea;
+    --ink: #161616;
+    --muted: #8a8a8a;
+    --line: #d9d9d9;
+    --dark: #161616;
+    --dark-muted: #9a9a9a;
+    --dark-line: #3a3a3a;
+    --mono: "Liberation Mono", "Courier New", Courier, monospace;
   }
   @page {
     size: A4;
-    margin: 18mm 17mm 20mm 17mm;
-    @bottom-left {
-      content: "Rapport d'incident — [Client] · Confidentiel";
-      font: 7.5pt "Helvetica Neue", Helvetica, Arial, sans-serif;
-      color: #8a94a3;
-    }
-    @bottom-right {
-      content: "Page " counter(page) " / " counter(pages);
-      font: 7.5pt "Helvetica Neue", Helvetica, Arial, sans-serif;
-      color: #8a94a3;
-    }
+    margin: 22mm 17mm 20mm 17mm;
+    @top-left { content: "[Client], rapport d'incident · confidentiel"; font: 6.8pt var(--mono); color: var(--muted); vertical-align: bottom; padding-bottom: 2.5mm; border-bottom: .4pt solid var(--line); }
+    @top-center { content: ""; vertical-align: bottom; padding-bottom: 2.5mm; border-bottom: .4pt solid var(--line); }
+    @top-right { content: "[Mois aaaa]"; font: 6.8pt var(--mono); color: var(--muted); vertical-align: bottom; padding-bottom: 2.5mm; border-bottom: .4pt solid var(--line); }
+    @bottom-left { content: "superhuit.ch"; font: 6.8pt var(--mono); color: var(--muted); vertical-align: top; padding-top: 2.5mm; border-top: .4pt solid var(--line); }
+    @bottom-center { content: ""; vertical-align: top; padding-top: 2.5mm; border-top: .4pt solid var(--line); }
+    @bottom-right { content: counter(page) " / " counter(pages); font: 6.8pt var(--mono); color: var(--muted); vertical-align: top; padding-top: 2.5mm; border-top: .4pt solid var(--line); }
   }
-  @page :first {
-    @bottom-left { content: none; }
+  @page cover { margin: 0; }
+  @page dark {
+    background: var(--dark);
+    @top-left { border-bottom-color: var(--dark-line); }
+    @top-center { border-bottom-color: var(--dark-line); }
+    @top-right { border-bottom-color: var(--dark-line); }
+    @bottom-left { border-top-color: var(--dark-line); }
+    @bottom-center { border-top-color: var(--dark-line); }
+    @bottom-right { border-top-color: var(--dark-line); }
   }
   * { box-sizing: border-box; }
   html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   body {
     margin: 0;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-size: 9.6pt;
+    font-size: 8.8pt;
     line-height: 1.5;
     color: var(--ink);
-    background: #fff;
   }
-  /* Cover header */
+  p { margin: 0 0 2.4mm; }
+  ul { margin: 0 0 3mm; padding-left: 4.5mm; }
+  li { margin: 0 0 1.2mm; }
+  strong { font-weight: 600; }
+  a { color: inherit; text-decoration: none; }
+  .mono { font-family: var(--mono); font-size: 6.8pt; color: var(--muted); }
+  .bar { width: 62mm; height: 2.6pt; background: currentColor; margin: 7mm 0 4mm; }
+
+  /* Cover: one full dark page */
   .cover {
-    border-top: 5px solid var(--accent);
-    padding-top: 14mm;
-    margin-bottom: 9mm;
-  }
-  .kicker {
-    font-size: 8pt;
-    letter-spacing: .14em;
-    text-transform: uppercase;
-    color: var(--accent);
-    font-weight: 700;
-    margin: 0 0 3mm;
-  }
-  .cover h1 {
-    font-size: 22pt;
-    line-height: 1.15;
-    margin: 0 0 2.5mm;
-    letter-spacing: -.01em;
-  }
-  .cover .sub {
-    font-size: 11pt;
-    color: var(--muted);
-    margin: 0 0 8mm;
-  }
-  .meta {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    border: 1px solid var(--line);
-    border-radius: 6px;
+    page: cover;
+    position: relative;
+    width: 210mm; height: 297mm;
+    background: var(--dark);
+    color: #fff;
     overflow: hidden;
   }
-  .meta div { padding: 3mm 4mm; border-right: 1px solid var(--line); }
-  .meta div:last-child { border-right: 0; }
-  .meta span { display: block; font-size: 7.2pt; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
-  .meta strong { font-size: 9.4pt; }
-  .meta .conf strong { color: var(--bad); }
-
-  /* Verdict cards */
-  .verdicts { display: grid; grid-template-columns: 1fr 1fr; gap: 4mm; margin: 5mm 0 4mm; }
-  .card { border: 1px solid var(--line); border-radius: 6px; padding: 4mm 4.5mm; break-inside: avoid; }
-  .card h3 { margin: 0 0 2mm; font-size: 10.5pt; }
-  .card .site { color: var(--muted); font-size: 8.4pt; margin: -1.5mm 0 3mm; }
-  .row { display: flex; justify-content: space-between; gap: 3mm; padding: 1.6mm 0; border-top: 1px solid var(--line); font-size: 8.8pt; }
-  .row:first-of-type { border-top: 0; }
-  .badge { display: inline-block; padding: .4mm 2.2mm; border-radius: 10px; font-size: 7.8pt; font-weight: 700; white-space: nowrap; }
-  .b-ok { background: var(--ok-bg); color: var(--ok); }
-  .b-warn { background: var(--warn-bg); color: var(--warn); }
-  .b-bad { background: var(--bad-bg); color: var(--bad); }
-  .b-info { background: #e7eef6; color: var(--accent); }
-  .card p { margin: 2.5mm 0 0; font-size: 8.6pt; color: var(--muted); }
-
-  h2 {
-    font-size: 14pt;
-    color: var(--accent);
-    margin: 9mm 0 3mm;
-    padding-bottom: 1.5mm;
-    border-bottom: 1px solid var(--line);
-    break-after: avoid;
+  .cover .brand { position: absolute; top: 18mm; left: 18mm; border: 1pt solid #fff; padding: 2.4mm 7mm; font-size: 9pt; letter-spacing: .02em; }
+  .cover .kind { position: absolute; top: 21mm; right: 18mm; font: 6.8pt var(--mono); color: var(--dark-muted); }
+  .cover .side {
+    position: absolute; left: 7mm; bottom: 60mm;
+    transform: rotate(-90deg); transform-origin: left top;
+    font: 6pt var(--mono); letter-spacing: .14em; color: var(--dark-muted); white-space: nowrap; word-spacing: 6mm;
   }
-  h3 { font-size: 10.8pt; margin: 6mm 0 2mm; break-after: avoid; }
-  p { margin: 0 0 2.6mm; }
-  ul, ol { margin: 0 0 3mm; padding-left: 5.5mm; }
-  li { margin: 0 0 1.3mm; }
-  li p { margin: 0; }
-  a { color: var(--accent); text-decoration: none; }
-  code {
-    font-family: "SF Mono", Menlo, Consolas, monospace;
-    font-size: 8.2pt;
-    background: var(--soft);
-    border: 1px solid var(--line);
-    border-radius: 3px;
-    padding: 0 1mm;
-    word-break: normal; overflow-wrap: anywhere;
-  }
+  .cover .name { position: absolute; top: 74mm; left: 19mm; right: 18mm; }
+  .cover h1 { font-size: 66pt; font-weight: 400; line-height: 1; margin: 0; letter-spacing: -.02em; }
+  .cover .subject { font-size: 13pt; line-height: 1.35; color: var(--dark-muted); margin: 2mm 0 0; max-width: 150mm; }
+  .cover .topics { position: absolute; top: 140mm; left: 19mm; right: 18mm; }
+  .cover .topics div { font-size: 24pt; line-height: 1.22; }
+  .cover .topics sup { font-size: 9pt; margin-left: 1.5mm; vertical-align: 11pt; color: var(--dark-muted); }
+  .cover .topics p { font-size: 8.4pt; color: var(--dark-muted); margin: 7mm 0 0; max-width: 140mm; }
+  .cover .bottom { position: absolute; left: 18mm; right: 18mm; bottom: 14mm; }
+  .cover .bottom .bar { margin: 0 0 8mm; background: #fff; }
+  .cover .bottom div { display: flex; justify-content: space-between; font: 6.8pt var(--mono); color: var(--dark-muted); }
+
+  /* Sections */
+  section { break-before: page; }
+  section.dark { page: dark; color: #fff; }
+  .head { display: flex; justify-content: space-between; align-items: flex-end; gap: 6mm; margin: 4mm 0 6mm; break-after: avoid; }
+  h2 { font-size: 34pt; font-weight: 400; line-height: 1.05; margin: 0; letter-spacing: -.015em; }
+  .prio { font-size: 7.6pt; white-space: nowrap; padding-bottom: 1.5mm; }
+  .prio i { display: inline-block; width: 2.5mm; height: 2.5mm; border: .8pt solid currentColor; border-radius: 50%; margin-right: .6mm; vertical-align: -.3mm; }
+  .prio i.on { background: currentColor; }
+  .prio span { margin-left: 1.5mm; }
+  .dark .prio span, .dark .muted { color: var(--dark-muted); }
+  .lead { font-size: 14pt; line-height: 1.38; margin: 0 0 6mm; }
+  h3 { font-size: 11pt; font-weight: 400; margin: 6mm 0 2mm; break-after: avoid; }
+  .muted { color: var(--muted); }
+  .body p, .body li { text-align: justify; hyphens: auto; }
+
+  /* Key figures */
+  .figures { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6mm; margin: 6mm 0 2mm; break-inside: avoid; }
+  .figures strong { display: block; font-size: 46pt; font-weight: 400; line-height: 1; letter-spacing: -.02em; }
+  .figures span { display: block; font-size: 8pt; color: var(--muted); margin-top: 1.5mm; }
+  .dark .figures span { color: var(--dark-muted); }
+
+  /* Verdict per site, two per row */
+  .verdicts { display: grid; grid-template-columns: 1fr 1fr; gap: 6mm 8mm; margin: 2mm 0 4mm; }
+  .verdict { border-top: .6pt solid var(--ink); padding-top: 2.5mm; break-inside: avoid; }
+  .verdict h4 { font-size: 11pt; font-weight: 400; margin: 0; }
+  .verdict .where { font: 6.8pt var(--mono); color: var(--muted); margin: .8mm 0 2.5mm; }
+  .verdict .row { display: flex; justify-content: space-between; align-items: center; gap: 3mm; padding: 1.5mm 0; border-top: .4pt solid var(--line); font-size: 8.4pt; }
+  .verdict p { font-size: 8pt; color: var(--muted); margin: 2.5mm 0 0; }
+  /* States: filled for compromised or exposed, outlined for safe with an action pending, plain for safe */
+  .state { display: inline-block; font-size: 7.6pt; line-height: 1.3; padding: .5mm 2mm; border: .8pt solid transparent; border-radius: 9pt; white-space: nowrap; }
+  .s-bad { background: var(--ink); color: #fff; }
+  .s-warn { border-color: var(--ink); }
+  .s-ok { color: var(--muted); padding-right: 0; }
+
+  /* Notes */
+  .note { border-left: 2.6pt solid currentColor; padding: .5mm 0 .5mm 4mm; margin: 4mm 0; break-inside: avoid; }
+  .note.alert { border: 0; background: var(--ink); color: #fff; padding: 4mm 5mm; }
+  .dark .note.alert { background: #fff; color: var(--ink); }
+
+  /* Tables */
+  table { width: 100%; border-collapse: collapse; margin: 0 0 4mm; font-size: 8.4pt; }
   table.keep { break-inside: avoid; }
-  table { width: 100%; border-collapse: collapse; margin: 2mm 0 4mm; font-size: 8.7pt; }
   thead { display: table-header-group; }
-  th {
-    text-align: left;
-    background: var(--soft);
-    color: var(--muted);
-    font-size: 7.6pt;
-    text-transform: uppercase;
-    letter-spacing: .06em;
-    font-weight: 700;
-    padding: 2mm 2.5mm;
-    border-bottom: 1px solid var(--line);
-  }
-  td { padding: 2mm 2.5mm; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { text-align: left; font: 6.8pt var(--mono); color: var(--muted); font-weight: 400; padding: 0 2mm 2mm 0; border-bottom: .6pt solid var(--ink); }
+  td { padding: 1.6mm 2mm 1.6mm 0; border-bottom: .4pt solid var(--line); vertical-align: top; }
   tr { break-inside: avoid; }
-  td.nowrap { white-space: nowrap; }
-  .lead { font-size: 10.4pt; }
-  .note {
-    background: var(--soft);
-    border-left: 3px solid var(--accent);
-    padding: 3mm 4mm;
-    margin: 3mm 0 4mm;
-    font-size: 8.9pt;
-    break-inside: avoid;
-  }
-  .note.alert { border-left-color: var(--bad); background: var(--bad-bg); }
+  td.date { font-family: var(--mono); font-size: 7.6pt; white-space: nowrap; }
+
+  /* Other findings, two per row */
+  .findings { display: grid; grid-template-columns: 1fr 1fr; gap: 5mm 8mm; }
+  .finding { border-top: .6pt solid var(--line); padding-top: 2mm; break-inside: avoid; }
+  .finding .num { font-size: 15pt; line-height: 1; letter-spacing: -.02em; }
+  .finding h4 { font-size: 9.6pt; font-weight: 400; line-height: 1.3; margin: 1mm 0 1.4mm; }
+  .finding p { font-size: 8pt; line-height: 1.45; margin: 0; }
+
   /* Checklists */
   ul.check { list-style: none; padding-left: 0; }
-  ul.check li { position: relative; padding-left: 6.5mm; break-inside: avoid; }
-  ul.check li::before {
-    content: "";
-    position: absolute; left: 0; top: .9mm;
-    width: 3.6mm; height: 3.6mm;
-    border: 1.2px solid #9aa4b2; border-radius: 1mm;
-  }
-  ul.check li.done::before {
-    background: var(--ok); border-color: var(--ok);
-  }
-  ul.check li.done::after {
-    content: "";
-    position: absolute; left: 1.25mm; top: 1.35mm;
-    width: .9mm; height: 1.9mm;
-    border: solid #fff; border-width: 0 .45mm .45mm 0;
-    transform: rotate(45deg);
-  }
-  ul.check li.done { color: #3d4855; }
-  .sources { columns: 2; column-gap: 8mm; } .sources li { font-size: 8.2pt; margin-bottom: .8mm; break-inside: avoid; }
-  .small { font-size: 8.4pt; color: var(--muted); }
+  ul.check li { position: relative; padding: 1.3mm 0 1.3mm 7mm; margin: 0; border-bottom: .4pt solid var(--line); break-inside: avoid; }
+  ul.check li::before { content: ""; position: absolute; left: 0; top: 2mm; width: 3.6mm; height: 3.6mm; border: .8pt solid var(--ink); }
+  ul.check li.done::before { background: var(--ink); }
+  ul.check li.done::after { content: ""; position: absolute; left: 1.25mm; top: 2.45mm; width: .9mm; height: 1.9mm; border: solid #fff; border-width: 0 .45mm .45mm 0; transform: rotate(45deg); }
+  .who { display: block; font: 6.8pt var(--mono); color: var(--muted); }
+
+  /* Closing: one full dark page */
+  .closing { page: dark; color: #fff; }
+  .closing h2 { font-size: 60pt; margin-top: 30mm; }
+  .closing .bar { background: #fff; margin: 4mm 0 10mm; }
+  .closing p { max-width: 150mm; }
+  .closing .contact { font-size: 17pt; line-height: 1.3; margin: 12mm 0 0; }
+  .closing .contact + .contact { margin-top: 6mm; }
+  .closing .mono { color: var(--dark-muted); margin-top: 12mm; }
+  .closing .sources { margin-top: 4mm; line-height: 1.6; }
 </style>
 </head>
 <body>
 
-<!-- Every component of the report appears once below; repeat cards, rows, sections and list items as needed. -->
+<!-- Every component of the report appears once below; repeat verdicts, rows, findings, sections and list items as needed. -->
 
-<section class="cover">
-  <p class="kicker">Rapport d'incident de sécurité</p>
-  <h1>Failles PHP CVE&#8209;YYYY&#8209;NNNNN &amp; CVE&#8209;YYYY&#8209;NNNNN (« [nom usuel] »)</h1>
-  <p class="sub">[Client] · [site 1] · [site 2]</p>
-  <div class="meta">
-    <div><span>Date</span><strong>[dd.mm.yyyy]</strong></div>
-    <div><span>Établi par</span><strong>[Auteur], [agence]</strong></div>
-    <div><span>Période analysée</span><strong>[dd.mm] – [dd.mm.yyyy]</strong></div>
-    <div class="conf"><span>Classification</span><strong>Confidentiel</strong></div>
+<div class="cover">
+  <div class="brand">SUPERHUIT</div>
+  <div class="kind">Rapport d'incident · Confidentiel</div>
+  <div class="side">RAPPORT D'INCIDENT [MOIS AAAA] SUPERHUIT.CH</div>
+  <div class="name">
+    <h1>[Client]</h1>
+    <p class="subject">Failles PHP CVE&#8209;YYYY&#8209;NNNNN &amp; CVE&#8209;YYYY&#8209;NNNNN (« [nom usuel] »)</p>
   </div>
-</section>
-
-<h2 style="margin-top:0">Résumé</h2>
-<p class="lead">[Verdict en deux ou trois phrases.]</p>
-
-<div class="verdicts">
-  <div class="card">
-    <h3>[site]</h3>
-    <div class="site">[Environnement] · [Hébergement]</div>
-    <div class="row"><span>[Nom usuel]</span><span class="badge b-ok">Aucune trace d'exploitation</span></div>
-    <div class="row"><span>Compromission</span><span class="badge b-ok">Aucun indice</span></div>
-    <div class="row"><span>PHP corrigé</span><span class="badge b-ok">Oui, depuis le [dd.mm hh:mm]</span></div>
-    <div class="row"><span>État au [dd.mm.yyyy]</span><span class="badge b-warn">Sain, [action] à faire</span></div>
-    <p>[Raison principale en une ligne.]</p>
+  <div class="topics">
+    <div>[site 1]<sup>[état]</sup></div>
+    <div>[site 2]<sup>[état]</sup></div>
+    <p>Une analyse des serveurs en lecture seule, du [dd.mm.yyyy] au [dd.mm.yyyy]. Les exposants indiquent l'état de chaque site au [dd.mm.yyyy].</p>
+  </div>
+  <div class="bottom">
+    <div class="bar"></div>
+    <div><span>[site 1] · [site 2]</span><span>[Mois aaaa]</span></div>
   </div>
 </div>
 
-<p class="small">[Comment chaque hébergement a été corrigé, si les sites diffèrent.]</p>
+<section style="break-before: auto">
+  <div class="head"><h2>Résumé</h2><div class="prio"><i class="on"></i><i class="on"></i><i></i><span>Action à prévoir</span></div></div>
+  <p class="lead">[Verdict en une ou deux phrases, dans les mots du client.]</p>
+  <div class="body">
+    <p>[Ce qui fonde le verdict et ce qui reste ouvert.]</p>
+  </div>
+  <div class="verdicts">
+    <div class="verdict">
+      <h4>[site]</h4>
+      <div class="where">[Environnement] · [Hébergement]</div>
+      <div class="row"><span>[Nom usuel]</span><span class="state s-ok">Aucune trace d'exploitation</span></div>
+      <div class="row"><span>Compromission</span><span class="state s-ok">Aucun indice</span></div>
+      <div class="row"><span>PHP corrigé</span><span class="state s-ok">Oui, depuis le [dd.mm hh:mm]</span></div>
+      <div class="row"><span>État au [dd.mm.yyyy]</span><span class="state s-warn">Sain, [action] à faire</span></div>
+      <p>[Raison principale en une ligne.]</p>
+    </div>
+  </div>
+  <div class="figures">
+    <div><strong>[n]</strong><span>[ce que compte le chiffre]</span></div>
+  </div>
+  <div class="bar"></div>
+  <p class="mono">Établi le [dd.mm.yyyy] par [Auteur], superhuit · période analysée [dd.mm.yyyy] – [dd.mm.yyyy]</p>
+</section>
 
-<h2>Contexte</h2>
-<p>[La faille en termes simples, avec un lien vers la source.]</p>
-<ul>
-  <li><strong>[CVE]</strong> : [mécanisme].</li>
-  <li><strong>Versions concernées</strong> : [versions]. Versions corrigées : [versions].</li>
-  <li><strong>Traces attendues</strong> : [indicateurs dans les journaux et sur le disque].</li>
-</ul>
+<section>
+  <div class="head"><h2>Contexte</h2></div>
+  <p class="lead">[La faille en termes simples.]</p>
+  <div class="body">
+    <ul>
+      <li><strong>[CVE]</strong> : [mécanisme].</li>
+      <li><strong>Versions concernées</strong> : [versions]. Versions corrigées : [versions].</li>
+      <li><strong>Traces attendues</strong> : [indicateurs dans les journaux et sur le disque].</li>
+    </ul>
+  </div>
+</section>
 
-<table>
-  <thead><tr><th style="width:26%">Date (heure suisse)</th><th>Événement</th></tr></thead>
-  <tbody>
-    <tr><td class="nowrap">[dd.mm.yyyy hh:mm]</td><td>[Événement]</td></tr>
-  </tbody>
-</table>
+<section>
+  <div class="head"><h2>Chronologie</h2></div>
+  <p class="lead">[De la divulgation au dernier correctif sur les sites du client.]</p>
+  <table>
+    <thead><tr><th style="width:22%">Date (heure suisse)</th><th>Événement</th></tr></thead>
+    <tbody>
+      <tr><td class="date">[dd.mm.yyyy hh:mm]</td><td>[Événement]</td></tr>
+    </tbody>
+  </table>
+  <div class="note"><strong>Statut sur nos hébergements.</strong> [Version affichée, version réelle, preuve du correctif.]</div>
+</section>
 
-<div class="note"><strong>Statut sur nos hébergements.</strong> [Version affichée, version réelle, preuve du correctif.]</div>
+<section>
+  <div class="head"><h2>Périmètre et méthode</h2></div>
+  <p class="lead">L'analyse a été menée le [dd.mm.yyyy] par accès SSH en lecture seule ; rien n'a été modifié sur les serveurs.</p>
+  <p>Les heures sont données en heure suisse (CEST).</p>
+  <table class="keep">
+    <thead><tr><th style="width:34%">Hébergement</th><th>Sites analysés</th></tr></thead>
+    <tbody>
+      <tr><td>[Hébergement]</td><td>[Sites]</td></tr>
+    </tbody>
+  </table>
+  <table>
+    <thead><tr><th style="width:38%">Contrôle</th><th>Période / portée</th></tr></thead>
+    <tbody>
+      <tr><td>[Contrôle]</td><td>[Période ou portée]</td></tr>
+    </tbody>
+  </table>
+  <h3>Limites</h3>
+  <div class="body">
+    <p>[Chaque lacune : format des journaux, rétention, journaux perdus au redéploiement.]</p>
+  </div>
+</section>
 
-<h2>Périmètre et méthode</h2>
-<p>L'analyse a été menée le [dd.mm.yyyy] par accès SSH en lecture seule ; rien n'a été modifié sur les serveurs. Les heures sont données en heure suisse (CEST).</p>
-<table class="keep">
-  <thead><tr><th style="width:34%">Hébergement</th><th>Sites analysés</th></tr></thead>
-  <tbody>
-    <tr><td>[Hébergement]</td><td>[Sites]</td></tr>
-  </tbody>
-</table>
-<table>
-  <thead><tr><th style="width:38%">Contrôle</th><th>Période / portée</th></tr></thead>
-  <tbody>
-    <tr><td>[Contrôle]</td><td>[Période ou portée]</td></tr>
-  </tbody>
-</table>
-<p><strong>Limites.</strong> [Chaque lacune : format des journaux, rétention, journaux perdus au redéploiement.]</p>
+<!-- One section per site; dark when the site is compromised or exposed. -->
+<section class="dark">
+  <div class="head"><h2>Analyse<br>[site]</h2><div class="prio"><i class="on"></i><i class="on"></i><i class="on"></i><span>Intervention urgente</span></div></div>
+  <p class="lead">[Verdict du site en une phrase.]</p>
+  <div class="figures">
+    <div><strong>[n]</strong><span>[ce que compte le chiffre]</span></div>
+  </div>
+  <div class="body">
+    <ul>
+      <li><strong>[Famille de contrôles]</strong> : [résultat chiffré].</li>
+    </ul>
+  </div>
+  <div class="note alert"><strong>Risque résiduel.</strong> [Ce qui ne peut pas être exclu, et pourquoi.]</div>
+</section>
 
-<h2>Analyse [site]</h2>
-<p>[Verdict du site en une phrase.]</p>
-<ul>
-  <li><strong>[Famille de contrôles]</strong> : [résultat chiffré].</li>
-</ul>
-<div class="note alert"><strong>Risque résiduel.</strong> [Ce qui ne peut pas être exclu, et pourquoi.]</div>
+<section>
+  <div class="head"><h2>Autres constats</h2></div>
+  <p class="lead">Ces points sont sans lien avec la faille, mais méritent d'être traités.</p>
+  <div class="findings">
+    <div class="finding">
+      <div class="num">1</div>
+      <h4>[Constat]</h4>
+      <p>[Description, sans chemin de fichier ni URL.]</p>
+    </div>
+  </div>
+</section>
 
-<h2>Autres constats</h2>
-<p>Ces points sont sans lien avec la faille, mais méritent d'être traités.</p>
-<ul>
-  <li><strong>[Constat]</strong> : [description, sans chemin de fichier ni URL].</li>
-</ul>
+<section>
+  <div class="head"><h2>Conclusions et<br>recommandations</h2></div>
+  <p class="lead">[Conclusion en une ou deux phrases.]</p>
+  <h3>Déjà fait</h3>
+  <ul class="check">
+    <li class="done">[Action réalisée]</li>
+  </ul>
+  <h3>Fortement recommandé</h3>
+  <ul class="check">
+    <li>[Action]<span class="who">[qui]</span></li>
+  </ul>
+  <h3>Dans les prochaines semaines</h3>
+  <ul class="check">
+    <li>[Action]<span class="who">[qui]</span></li>
+  </ul>
+</section>
 
-<h2>Conclusions et recommandations</h2>
-<p>[Conclusion en une ou deux phrases.]</p>
-<h3>Déjà fait</h3>
-<ul class="check">
-  <li class="done">[Action réalisée]</li>
-</ul>
-<h3>Fortement recommandé</h3>
-<ul class="check">
-  <li>[Action] — <span class="badge b-info">[qui]</span></li>
-</ul>
-<h3>Dans les prochaines semaines</h3>
-<ul class="check">
-  <li>[Action]</li>
-</ul>
-<p>[Offre de réaliser ces suivis, avec l'estimation si elle est connue.]</p>
-
-<h3 style="margin-top:4mm">Sources</h3>
-<p class="small"><a href="[url]">[Source]</a> · <a href="[url]">[Source]</a></p>
+<section class="closing">
+  <h2>Parlons-en.</h2>
+  <div class="bar"></div>
+  <p>[Offre de réaliser les suivis qui reviennent à l'agence, avec l'estimation si elle est connue.]</p>
+  <p class="contact">+41 (0) 21 652 18 18<br>hello@superhuit.ch</p>
+  <p class="contact">Rue des Terreaux 7,<br>1003 Lausanne,<br>Suisse</p>
+  <p class="mono">© [aaaa] Superhuit</p>
+  <p class="mono sources">Sources : <a href="[url]">[Source]</a> · <a href="[url]">[Source]</a></p>
+</section>
 
 </body>
 </html>

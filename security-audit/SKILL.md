@@ -1,12 +1,12 @@
 ---
 name: security-audit
 description: Audit a site for known vulnerabilities in its stack, hunt its servers' logs and files for exploitation, and deliver the client PDF report. Use when the user asks for a security audit or incident report, or whether a site is affected by a CVE.
-argument-hint: [CVE ids or technology] [ssh hosts]
+argument-hint: [CVE ids or technology] [ssh hosts] [--v1-layout]
 ---
 
 # security-audit
 
-Answer two questions for every environment of the site (production, staging, any sibling site on the same hosting): **is it exposed** to a known vulnerability in its stack, and **is there evidence it was exploited**. The deliverable is a client-facing PDF built from [`template.html`](template.html).
+Answer two questions for every environment of the site (production, staging, any sibling site on the same hosting): **is it exposed** to a known vulnerability in its stack, and **is there evidence it was exploited**. The deliverable is a client-facing PDF built from [`template.html`](template.html), or from [`template-v1.html`](template-v1.html), the earlier blue layout, when `--v1-layout` is passed.
 
 Servers stay **read-only**: read files, run read-only WP-CLI, and copy logs to your scratchpad. A write on a server (moving a file, logging users out, rotating a key) runs only when the user asks for that specific action; propose remediation work as its own session with a brief naming the one write it may perform.
 
@@ -24,9 +24,10 @@ Then ask, in one `AskUserQuestion`, only what is still unknown:
 - the start of the analysis window (default: the earliest of the advisory's first observed exploitation and the user's date; signature searches cover the whole log retention);
 - the report language;
 - the client's display name;
-- the audit folder, when the repo does not settle it.
+- the audit folder, when the repo does not settle it;
+- the layout, when the audit folder holds a report in the v1 layout (its HTML has a `kicker` class) and `--v1-layout` was not passed: the new layout by default, v1 for a follow-up report that must match it.
 
-**Done when:** every environment has an alias or a recorded "no access", and the window, language, client name and audit folder are set.
+**Done when:** every environment has an alias or a recorded "no access", and the window, language, client name, audit folder and layout are set.
 
 ## 2. Inventory
 
@@ -70,4 +71,4 @@ Write or update the project memory note `<project>-hosting-forensics`: host alia
 
 Draft the client email, then log the delivery in ClickUp when the user reports it sent: [`DELIVERY.md`](DELIVERY.md).
 
-After a correction to the report, update the HTML, re-render, re-check the pages, and keep the email draft consistent with it.
+After a correction to the report, update the HTML in its own layout, re-render, re-check the pages, and keep the email draft consistent with it.
