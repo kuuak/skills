@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Check-up sécurité — [Client]</title>
+<style>
+  :root {
+    --ink: #161616;
+    --muted: #8a8a8a;
+    --line: #d9d9d9;
+    --dark: #161616;
+    --dark-muted: #9a9a9a;
+    --dark-line: #3a3a3a;
+    --mono: "Liberation Mono", "Courier New", Courier, monospace;
+  }
+  @page {
+    size: A4;
+    margin: 22mm 17mm 20mm 17mm;
+    @top-left { content: "[site], check-up sécurité"; font: 6.8pt var(--mono); color: var(--muted); vertical-align: bottom; padding-bottom: 2.5mm; border-bottom: .4pt solid var(--line); }
+    @top-center { content: ""; vertical-align: bottom; padding-bottom: 2.5mm; border-bottom: .4pt solid var(--line); }
+    @top-right { content: "[Mois aaaa]"; font: 6.8pt var(--mono); color: var(--muted); vertical-align: bottom; padding-bottom: 2.5mm; border-bottom: .4pt solid var(--line); }
+    @bottom-left { content: "superhuit.ch"; font: 6.8pt var(--mono); color: var(--muted); vertical-align: top; padding-top: 2.5mm; border-top: .4pt solid var(--line); }
+    @bottom-center { content: ""; vertical-align: top; padding-top: 2.5mm; border-top: .4pt solid var(--line); }
+    @bottom-right { content: counter(page) " / " counter(pages); font: 6.8pt var(--mono); color: var(--muted); vertical-align: top; padding-top: 2.5mm; border-top: .4pt solid var(--line); }
+  }
+  @page cover { margin: 0; }
+  @page dark {
+    background: var(--dark);
+    @top-left { border-bottom-color: var(--dark-line); }
+    @top-center { border-bottom-color: var(--dark-line); }
+    @top-right { border-bottom-color: var(--dark-line); }
+    @bottom-left { border-top-color: var(--dark-line); }
+    @bottom-center { border-top-color: var(--dark-line); }
+    @bottom-right { border-top-color: var(--dark-line); }
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body {
+    margin: 0;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 8.8pt;
+    line-height: 1.5;
+    color: var(--ink);
+  }
+  p { margin: 0 0 2.4mm; }
+  ul { margin: 0 0 3mm; padding-left: 4.5mm; }
+  li { margin: 0 0 1.2mm; }
+  .mono { font-family: var(--mono); font-size: 6.8pt; color: var(--muted); }
+  .bar { width: 62mm; height: 2.6pt; background: currentColor; margin: 7mm 0 4mm; }
+
+  /* Cover: one full dark page */
+  .cover {
+    page: cover;
+    position: relative;
+    width: 210mm; height: 297mm;
+    background: var(--dark);
+    color: #fff;
+    overflow: hidden;
+  }
+  .cover .brand { position: absolute; top: 18mm; left: 18mm; border: 1pt solid #fff; padding: 2.4mm 7mm; font-size: 9pt; letter-spacing: .02em; }
+  .cover .kind { position: absolute; top: 21mm; right: 18mm; font: 6.8pt var(--mono); color: var(--dark-muted); }
+  .cover .side {
+    position: absolute; left: 7mm; bottom: 60mm;
+    transform: rotate(-90deg); transform-origin: left top;
+    font: 6pt var(--mono); letter-spacing: .14em; color: var(--dark-muted); white-space: nowrap; word-spacing: 6mm;
+  }
+  .cover .name { position: absolute; top: 74mm; left: 19mm; right: 18mm; }
+  .cover h1 { font-size: 66pt; font-weight: 400; line-height: 1; margin: 0; letter-spacing: -.02em; }
+  .cover .client { font-size: 13pt; color: var(--dark-muted); margin: 1.5mm 0 0; }
+  .cover .topics { position: absolute; top: 140mm; left: 19mm; right: 18mm; }
+  .cover .topics div { font-size: 24pt; line-height: 1.22; }
+  .cover .topics sup { font-size: 9pt; margin-left: 1mm; vertical-align: 11pt; }
+  .cover .topics p { font-size: 8.4pt; color: var(--dark-muted); margin: 7mm 0 0; max-width: 140mm; }
+  .cover .bottom { position: absolute; left: 18mm; right: 18mm; bottom: 14mm; }
+  .cover .bottom .bar { margin: 0 0 8mm; background: #fff; }
+  .cover .bottom div { display: flex; justify-content: space-between; font: 6.8pt var(--mono); color: var(--dark-muted); }
+
+  /* Sections */
+  section { break-before: page; }
+  section.dark { page: dark; color: #fff; }
+  .head { display: flex; justify-content: space-between; align-items: flex-end; gap: 6mm; margin: 4mm 0 6mm; break-after: avoid; }
+  h2 { font-size: 34pt; font-weight: 400; line-height: 1.05; margin: 0; letter-spacing: -.015em; }
+  h2 sup { font-size: 9pt; margin-left: 1mm; vertical-align: 15pt; letter-spacing: 0; }
+  .prio { font-size: 7.6pt; white-space: nowrap; padding-bottom: 1.5mm; }
+  .prio i { display: inline-block; width: 2.5mm; height: 2.5mm; border: .8pt solid currentColor; border-radius: 50%; margin-right: .6mm; vertical-align: -.3mm; }
+  .prio i.on { background: currentColor; }
+  .prio span { margin-left: 1.5mm; }
+  .dark .prio span, .dark .muted { color: var(--dark-muted); }
+  .lead { font-size: 14pt; line-height: 1.38; margin: 0 0 6mm; }
+  h3 { font-size: 11pt; font-weight: 400; margin: 6mm 0 2mm; break-after: avoid; }
+  .label { font-size: 8pt; font-weight: 500; margin: 0 0 .8mm; }
+  .muted { color: var(--muted); }
+  .body p { text-align: justify; hyphens: auto; }
+
+  /* Summary figures */
+  .figures { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6mm; margin: 2mm 0 2mm; }
+  .figures strong { display: block; font-size: 58pt; font-weight: 400; line-height: 1; letter-spacing: -.02em; }
+  .figures span { display: block; font-size: 8pt; color: var(--muted); margin-top: 1.5mm; }
+  .figures .quiet strong { color: #cfcfcf; }
+
+  /* Finding cards, two per row */
+  .findings { display: grid; grid-template-columns: 1fr 1fr; gap: 7mm 8mm; }
+  .finding { border-top: .6pt solid var(--line); padding-top: 3mm; break-inside: avoid; }
+  .dark .finding { border-top-color: var(--dark-line); }
+  .finding .num { font-size: 26pt; line-height: 1; letter-spacing: -.02em; }
+  .finding h4 { font-size: 10.5pt; font-weight: 400; line-height: 1.3; margin: 1.5mm 0 3mm; }
+  .finding .label { margin-top: 2mm; }
+  .finding p { font-size: 8.4pt; margin: 0; }
+  .finding .act { font: 6.8pt var(--mono); color: var(--muted); margin-top: 3mm; }
+  .dark .finding .act { color: var(--dark-muted); }
+  /* To watch: two per row, up to ten on one page */
+  .findings.compact { grid-template-columns: 1fr 1fr; gap: 3.5mm 8mm; }
+  .compact .finding { padding-top: 1.8mm; }
+  .compact .finding .num { font-size: 15pt; }
+  .compact .finding h4 { font-size: 9pt; margin: .8mm 0 1.4mm; }
+  .compact .finding .label { font-size: 7.2pt; margin-top: 1.1mm; }
+  .compact .finding p { font-size: 7.6pt; line-height: 1.4; }
+  .compact .finding .act { margin-top: 1.2mm; }
+
+  /* Tables */
+  table { width: 100%; border-collapse: collapse; margin: 0 0 4mm; font-size: 8.4pt; }
+  thead { display: table-header-group; }
+  th { text-align: left; font: 6.8pt var(--mono); color: var(--muted); font-weight: 400; padding: 0 2mm 2mm 0; border-bottom: .6pt solid var(--ink); }
+  td { padding: 2mm 2mm 2mm 0; border-bottom: .4pt solid var(--line); vertical-align: top; }
+  tr { break-inside: avoid; }
+  td.num, th.num { text-align: right; white-space: nowrap; padding-right: 0; }
+  td.id { font-family: var(--mono); font-size: 8pt; }
+  table.order td { vertical-align: middle; }
+  .box { display: inline-block; width: 4mm; height: 4mm; border: .8pt solid var(--ink); }
+  .pt { white-space: nowrap; }
+  table.order tr.total td { border-bottom: 0; border-top: .6pt solid var(--ink); font-weight: 700; }
+  table.order tr.total + tr.total td { border-top: .4pt solid var(--line); }
+
+  /* Closing: one full dark page */
+  .closing { page: dark; color: #fff; }
+  .closing h2 { font-size: 60pt; margin-top: 30mm; }
+  .closing .bar { background: #fff; margin: 4mm 0 10mm; }
+  .closing p { max-width: 150mm; }
+  .closing .contact { font-size: 17pt; line-height: 1.3; margin: 12mm 0 0; }
+  .closing .contact + .contact { margin-top: 6mm; }
+  .closing .mono { color: var(--dark-muted); margin-top: 12mm; }
+</style>
+</head>
+<body>
+
+<!-- Every component of the report appears once below; repeat findings, rows and sections as needed. -->
+
+<div class="cover">
+  <div class="brand">SUPERHUIT</div>
+  <div class="kind">Check-up sécurité · Confidentiel</div>
+  <div class="side">CHECK-UP SÉCURITÉ [MOIS AAAA] SUPERHUIT.CH</div>
+  <div class="name">
+    <h1>[site]</h1>
+    <p class="client">[Client]</p>
+  </div>
+  <div class="topics">
+    <div>À corriger<sup>[n]</sup></div>
+    <div>À surveiller<sup>[n]</sup></div>
+    <div>En ordre<sup>[n]</sup></div>
+    <p>Un regard sur la sécurité du site, depuis l'extérieur[ et sur le serveur en lecture seule]. Les exposants indiquent le nombre de points par catégorie.</p>
+  </div>
+  <div class="bottom">
+    <div class="bar"></div>
+    <div><span>[site]</span><span>[Mois aaaa]</span></div>
+  </div>
+</div>
+
+<section style="break-before: auto">
+  <div class="head"><h2>Résumé</h2><div class="prio"><i class="on"></i><i class="on"></i><i></i><span>À entretenir</span></div></div>
+  <p class="lead">[Verdict en une ou deux phrases, dans les mots du client.]</p>
+  <div class="body">
+    <p>[Les points à corriger en une phrase ; ce qui a changé depuis le dernier check-up.]</p>
+  </div>
+  <div class="figures" style="margin-top:8mm">
+    <div><strong>[n]</strong><span>points à corriger</span></div>
+    <div><strong>[n]</strong><span>points à surveiller</span></div>
+    <div class="quiet"><strong>[n]</strong><span>contrôles en ordre</span></div>
+  </div>
+  <div class="bar"></div>
+  <p class="mono">Établi le [dd.mm.yyyy] par [Auteur], superhuit</p>
+</section>
+
+<section class="dark">
+  <div class="head"><h2>À corriger<sup>[n]</sup></h2><div class="prio"><i class="on"></i><i class="on"></i><i class="on"></i><span>Priorité haute</span></div></div>
+  <div class="findings">
+    <div class="finding">
+      <div class="num">1</div>
+      <h4>[Titre du constat]</h4>
+      <p class="label">Ce que nous avons constaté</p>
+      <p>[Ce que nous avons vu, avec le chiffre qui le rend concret.]</p>
+      <p class="label">Ce que cela implique</p>
+      <p>[Ce que cela peut coûter au client.]</p>
+      <div class="act">Action A1</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="head"><h2>À surveiller<sup>[n]</sup></h2><div class="prio"><i class="on"></i><i class="on"></i><i></i><span class="muted">Priorité moyenne</span></div></div>
+  <div class="findings compact">
+    <div class="finding">
+      <div class="num">2</div>
+      <h4>[Titre du constat]</h4>
+      <p class="label">Ce que nous avons constaté</p>
+      <p>[Une phrase courte.]</p>
+      <p class="label">Ce que cela implique</p>
+      <p>[Une phrase courte.]</p>
+      <div class="act">Action A2</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="head"><h2>En ordre<sup>[n]</sup></h2></div>
+  <table>
+    <thead><tr><th style="width:42%">Contrôle</th><th>Résultat</th></tr></thead>
+    <tbody>
+      <tr><td>[Contrôle en mots simples]</td><td>[Résultat]</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <div class="head"><h2>Actions proposées</h2></div>
+  <p class="lead">Cochez les actions souhaitées et renvoyez ce document, ou répondez à notre e-mail avec leurs numéros (par exemple A1, A3).</p>
+  <table class="order">
+    <thead><tr><th style="width:7%"></th><th style="width:7%">N°</th><th>Action</th><th style="width:15%">Points</th><th class="num" style="width:12%">Heures</th></tr></thead>
+    <tbody>
+      <tr><td><span class="box"></span></td><td class="id">A1</td><td>[Libellé de ESTIMATES.md]</td><td class="pt">● 1 &nbsp;○ 3</td><td class="num">[x–y] h</td></tr>
+      <tr><td><span class="box"></span></td><td class="id">A2</td><td>[Libellé de ESTIMATES.md]</td><td class="pt">○ 2</td><td class="num">[x–y] h</td></tr>
+      <tr class="total"><td></td><td colspan="3">Actions sur les points à corriger</td><td class="num">[x–y] h</td></tr>
+      <tr class="total"><td></td><td colspan="3">Toutes les actions</td><td class="num">[x–y] h</td></tr>
+    </tbody>
+  </table>
+  <p class="muted">● point à corriger &nbsp; ○ point à surveiller. Estimations valables [n] jours à compter de la date du rapport. Chaque action comprend une sauvegarde complète avant l'intervention et un contrôle du site après.</p>
+
+  <h3>Périmètre et limites</h3>
+  <div class="body">
+    <p>L'analyse a été menée le [dd.mm.yyyy] depuis l'extérieur, comme le ferait un visiteur : rien n'a été modifié sur le site ni sur ses serveurs, et aucun essai de connexion n'a été fait.</p>
+  </div>
+  <ul>
+    <li>[Chaque contrôle non vérifiable, et pourquoi.]</li>
+  </ul>
+</section>
+
+<section class="closing">
+  <h2>Parlons-en.</h2>
+  <div class="bar"></div>
+  <p>Plutôt que des interventions ponctuelles, notre plan de maintenance couvre ces points dans la durée : [plan et prix de ESTIMATES.md]. Nous vous en présentons volontiers les conditions, ou réalisons les actions que vous aurez cochées.</p>
+  <p class="contact">+41 (0) 21 652 18 18<br>hello@superhuit.ch</p>
+  <p class="contact">Rue des Terreaux 7,<br>1003 Lausanne,<br>Suisse</p>
+  <p class="mono">© [aaaa] Superhuit</p>
+</section>
+
+</body>
+</html>

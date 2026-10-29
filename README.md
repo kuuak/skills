@@ -8,12 +8,13 @@ Claude Code skills for working through GitHub issues with subagents: each issue 
 - `merge-dependabot` — batch the open Dependabot PRs into one branch and draft PR, applying minor and patch bumps and asking about each major
 - `cleanup-worktrees` — find a repo's stale worktrees and sibling checkout folders, prove each one's work has landed, and remove the ones you approve
 - `security-audit` — audit a site's repo and servers (read-only over SSH) for known vulnerabilities in its stack and signs of exploitation, then render the client PDF report and draft the email that carries it
+- `security-audit-light` — a passive check-up of a site we built but no longer maintain: findings sorted into OK, to watch and to fix, and a client PDF with numbered actions and estimated hours the client ticks to order
 
-`fix-issues`, `implement-epic`, `review-pr` and `cleanup-worktrees` are user-invoked: run them as `/fix-issues 580 612`, `/implement-epic 42`, `/review-pr 701`, `/cleanup-worktrees`. `merge-dependabot` also triggers on its own when you ask to merge or batch Dependabot updates, or run it as `/merge-dependabot [branch]`. `security-audit` triggers when you ask for a security audit or whether a site is affected by a CVE, or run it as `/security-audit CVE-2026-109618 prod-host staging-host`.
+`fix-issues`, `implement-epic`, `review-pr` and `cleanup-worktrees` are user-invoked: run them as `/fix-issues 580 612`, `/implement-epic 42`, `/review-pr 701`, `/cleanup-worktrees`. `merge-dependabot` also triggers on its own when you ask to merge or batch Dependabot updates, or run it as `/merge-dependabot [branch]`. `security-audit` triggers when you ask for a security audit or whether a site is affected by a CVE, or run it as `/security-audit CVE-2026-109618 prod-host staging-host`. `security-audit-light` triggers when you ask for a light audit or security check-up, or run it as `/security-audit-light https://example.ch`; fill in the hourly rate and maintenance plan in its `ESTIMATES.md` first.
 
 ## Install
 
-Link each skill folder into `~/.claude/skills/`. `implement-epic` and `review-pr` read the fixer, reviewer, and merger briefs from `fix-issues`, so keep the three side by side:
+Link each skill folder into `~/.claude/skills/`. `implement-epic` and `review-pr` read the fixer, reviewer, and merger briefs from `fix-issues`, so keep the three side by side; `security-audit-light` reuses `security-audit`'s render script and check sources the same way:
 
 ```bash
 git clone https://github.com/kuuak/skills.git
