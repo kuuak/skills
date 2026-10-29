@@ -15,7 +15,7 @@ Step 4 of [`SKILL.md`](SKILL.md): the bucket for each result, so two clients wit
 |---|---|---|---|
 | HTTPS redirect | `301`/`308` to `https://` | redirect by script, or `302` | site served over plain HTTP |
 | Certificate | over 30 days left | 14 to 30 days left, without automatic renewal | under 14 days, expired, or wrong name |
-| Old TLS | TLS 1.0 and 1.1 refused | TLS 1.1 accepted | — |
+| Old TLS | TLS 1.0 and 1.1 refused | TLS 1.0 or 1.1 accepted | — |
 | HSTS | present, `max-age` ≥ 15768000 (six months) | missing or shorter | — |
 | Other security headers | `X-Content-Type-Options`, `Referrer-Policy`, frame protection and `Permissions-Policy` all present | any of them missing; no CSP | — |
 | Version disclosure | none | any header, tag, file or page giving the exact version (`readme.html`, an installer page) | — |

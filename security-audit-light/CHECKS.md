@@ -39,7 +39,7 @@ A probe **exists** when it answers `200` or `206` with a body that is neither th
   openssl s_client -tls1_1 -cipher 'DEFAULT:@SECLEVEL=0' -servername <host> -connect <host>:443 </dev/null
   ```
 
-  `alert protocol version` or a handshake failure means refused; `Protocol: TLSv1.1` means accepted.
+  Accepted only when a cipher is negotiated. `Cipher is (NONE)` or `alert protocol version` means refused: OpenSSL prints `Protocol: TLSv1.1` in both cases. Run it again with `-tls1` for TLS 1.0.
 
 ### Headers
 
