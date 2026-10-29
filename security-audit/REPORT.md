@@ -22,6 +22,8 @@ Each section starts on a new page with a large title and a lead of one or two se
 
 In English: Summary, Context, Timeline, Scope and method, Limits, Analysis, Other findings, Conclusions and recommendations, Done, Strongly recommended, In the coming weeks, Let's talk.; verdicts "Urgent action", "Action needed", "No sign of exploitation".
 
+The template's fixed labels in English: running header "<Client>, incident report · confidential"; cover "Incident report · Confidential", side text "INCIDENT REPORT <MONTH YYYY> SUPERHUIT.CH", scope line "A read-only analysis of the servers, from <date> to <date>. The superscripts give each site's state on <date>."; states "compromised", "exposed", "safe"; "Prepared on <date> by <author>, superhuit · period analysed <date> – <date>"; table headers "Date (Swiss time)", "Event", "Hosting", "Sites analysed", "Check", "Period / scope"; notes "Status on our hosting." and "Residual risk."; "Sources:". In English, set `<html lang="en">` as well: `lang` drives the hyphenation of justified text.
+
 ## Verdict per site
 
 Rows: the vulnerability's short name (exposure: "Non exposé", "Tentatives sans effet", "Aucune trace d'exploitation"), "Compromission", "PHP corrigé" (with the date and time) or the stack's own patch, and "État au <date>". Each state is a `.state`: `s-bad` (filled) for compromised or exposed, `s-warn` (outlined) for safe with an action pending or a result the logs cannot settle, `s-ok` (plain) for safe. One muted line under the rows gives the main reason.
