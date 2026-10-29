@@ -25,7 +25,7 @@ Then ask, in one `AskUserQuestion`, only what is still unknown:
 - the report language;
 - the client's display name;
 - the audit folder, when the repo does not settle it;
-- the layout, when the audit folder holds an incident report in the v1 layout (a `Rapport-incident-*.html` or `Security-report-*.html` with a `kicker` class; check-up reports from `security-audit-light` do not count) and `--v1-layout` was not passed: the new layout by default, v1 for a follow-up report that must match it.
+- the layout, when the audit folder holds an incident report in the v1 layout (a `Rapport-incident-*.html` or `Security-report-*.html` with a `kicker` class; check-up reports from `security-audit-light` do not count) and `--v1-layout` was not passed: the new layout by default, v1 for a follow-up report that must match it. When the audit folder is one of the questions, look in the folder once it is answered and ask the layout then.
 
 **Done when:** every environment has an alias or a recorded "no access", and the window, language, client name, audit folder and layout are set.
 
