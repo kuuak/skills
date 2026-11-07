@@ -1,6 +1,6 @@
 # Merger
 
-You land one reviewed PR: fix the nits worth fixing, bring the branch up to date with its base, get CI green, and merge. Your prompt gives you a PR number, an issue number, and a worktree path. Every command runs inside that worktree; other agents work in their own worktrees alongside you, and you are the only one merging.
+You land one reviewed PR: fix the nits worth fixing, bring the branch up to date with its base, get CI green, and merge. Your prompt gives you a PR number, a ticket number, and a worktree path. Every command runs inside that worktree; other agents work in their own worktrees alongside you, and you are the only one merging.
 
 You cannot reach the user. When the PR cannot land without a decision or a fix beyond this brief, **hand back** to a human and stop:
 
@@ -68,12 +68,12 @@ When branch protection blocks the merge (a required approval, a required check t
 
 Then:
 
-- `gh issue close <n> --comment "Merged into <base> in #<pr>"` when the issue is still open: `Closes #<n>` only fires on merges into the default branch.
+- `gh issue close <n> --comment "Merged into <base> in #<pr>"` when the ticket is still open: `Closes #<n>` only fires on merges into the default branch.
 - `gh issue edit <n> --remove-label ready-for-review`.
 - Post one comment on the PR listing each nit fixed with its SHA and each nit left with its reason.
 - Remove the worktree from the main checkout, the first path in `git worktree list`: `git -C <main> worktree remove <worktree>`, then `git -C <main> branch -D <head>`.
 
-**Done when:** the PR is merged, the issue is closed and off `ready-for-review`, the remote branch is gone, and the worktree is removed.
+**Done when:** the PR is merged, the ticket is closed and off `ready-for-review`, the remote branch is gone, and the worktree is removed.
 
 ## Return
 

@@ -1,13 +1,13 @@
 ---
 name: implement-epic
-description: Implement every sub-issue of a GitHub epic in dependency order on an epic branch (fixer, reviewer, and merger subagents per sub-issue), then review the epic PR and mark it ready once every sub-issue has landed.
+description: Implement every sub-issue of a GitHub epic in dependency order on an epic branch (implementer, reviewer, and merger subagents per sub-issue), then review the epic PR and mark it ready once every sub-issue has landed.
 disable-model-invocation: true
 argument-hint: <epic issue> [from <branch>]
 ---
 
 # implement-epic
 
-You are the **orchestrator**. You turn an epic into an ordered set of sub-issues, then run a **pipeline** of subagents per sub-issue: a **fixer** opens a PR, a **reviewer** fixes what is wrong, a **merger** fixes the nits worth fixing, merges, and closes the sub-issue. Every sub-issue PR targets the **epic branch**. The work reaches the base branch through one **epic PR**: a draft until every sub-issue has landed, then reviewed as a whole and marked ready for a human to merge. All code is written by the subagents. Your context holds one status line per sub-issue and nothing else: you never read a diff, a log, or a file the subagents touch.
+You are the **orchestrator**. You turn an epic into an ordered set of sub-issues, then run a **pipeline** of subagents per sub-issue: an **implementer** opens a PR, a **reviewer** fixes what is wrong, a **merger** fixes the nits worth fixing, merges, and closes the sub-issue. Every sub-issue PR targets the **epic branch**. The work reaches the base branch through one **epic PR**: a draft until every sub-issue has landed, then reviewed as a whole and marked ready for a human to merge. All code is written by the subagents. Your context holds one status line per sub-issue and nothing else: you never read a diff, a log, or a file the subagents touch.
 
 The request: `$ARGUMENTS`
 
@@ -71,26 +71,26 @@ Show the user one table (order, sub-issue, title, criteria, after, flags) plus t
 
 ## 4. Run the pipeline
 
-A sub-issue is **ready** when everything ordered before it has landed on the epic branch. Run at most **4 subagents at once** unless the user sets another limit: parallel test suites compete for CPU, ports, and databases. When a slot frees, fill it in this priority: merger, reviewer, fixer. Finishing a sub-issue unblocks its dependents; starting one does not.
+A sub-issue is **ready** when everything ordered before it has landed on the epic branch. Run at most **4 subagents at once** unless the user sets another limit: parallel test suites compete for CPU, ports, and databases. When a slot frees, fill it in this priority: merger, reviewer, implementer. Finishing a sub-issue unblocks its dependents; starting one does not.
 
 Each subagent is `general-purpose` and runs in the background, and each reads its own brief: your prompt hands it the path and the numbers, so its context starts with only its own sub-issue.
 
-**Fixer**, one per ready sub-issue. The epic branch is its base branch: its worktree starts from `origin/<epic branch>` and its PR targets the epic branch.
+**Implementer**, one per ready sub-issue. The epic branch is its base branch: its worktree starts from `origin/<epic branch>` and its PR targets the epic branch.
 
-- the issue number, `base branch <epic branch>`, and the acceptance criteria from triage
-- `Read <this skill's base directory>/../fix-issues/FIXER.md and follow it.`
+- the ticket number, `base branch <epic branch>`, and the acceptance criteria from triage
+- `Read <this skill's base directory>/../implement-tickets/IMPLEMENTER.md and follow it.`
 
-**Reviewer**, the moment a fixer returns a PR:
+**Reviewer**, the moment an implementer returns a PR:
 
-- `PR <pr>, issue <n>, worktree <absolute path>`
-- `Read <this skill's base directory>/../fix-issues/REVIEWER.md and follow it.`
+- `PR <pr>, ticket <n>, worktree <absolute path>`
+- `Read <this skill's base directory>/../implement-tickets/REVIEWER.md and follow it.`
 
-The reviewer prompt holds exactly those lines and nothing from the fixer's report: it judges the PR against the issue, never against the fixer's intent.
+The reviewer prompt holds exactly those lines and nothing from the implementer's report: it judges the PR against the sub-issue, never against the implementer's intent.
 
 **Merger**, when a reviewer returns with nothing needing a decision and nothing held back. Mergers run one at a time, the **merge lane**: each one updates its branch against an epic branch no other merger is moving.
 
-- `PR <pr>, issue <n>, worktree <absolute path>`
-- `Read <this skill's base directory>/../fix-issues/MERGER.md and follow it.`
+- `PR <pr>, ticket <n>, worktree <absolute path>`
+- `Read <this skill's base directory>/../implement-tickets/MERGER.md and follow it.`
 
 When the first merger returns `merged` and no epic PR is open, open it as a draft:
 
@@ -100,7 +100,7 @@ gh pr create --draft --base <base> --head <epic branch> --title "<epic title>" -
 
 It stays a draft through the rest of the run: only the epic review in step 5 marks it ready.
 
-A sub-issue **stalls** when its fixer returns a question, its reviewer returns anything needing a decision, or its merger hands back. Everything ordered after a stalled sub-issue stalls with it; the rest of the epic keeps running. A merger returning `blocked by branch protection` or `merge not permitted` closes the merge lane for the whole run: every later merge would hit the same rule, so finish the reviews already in flight and go to step 6.
+A sub-issue **stalls** when its implementer returns a question, its reviewer returns anything needing a decision, or its merger hands back. Everything ordered after a stalled sub-issue stalls with it; the rest of the epic keeps running. A merger returning `blocked by branch protection` or `merge not permitted` closes the merge lane for the whole run: every later merge would hit the same rule, so finish the reviews already in flight and go to step 6.
 
 Keep one line per sub-issue (stage, PR, outcome) as the subagents return.
 
@@ -112,8 +112,8 @@ Run this step only when every sub-issue of the epic is closed; otherwise the epi
 
 Set up a worktree on the epic branch: the one on it in `git worktree list`, else `git worktree add <repo root>/.claude/worktrees/epic-<epic> <epic branch>`. Then spawn one more reviewer, in the background, with exactly these lines:
 
-- `PR <epic pr>, issue <epic>, worktree <absolute path>`
-- `Read <this skill's base directory>/../fix-issues/REVIEWER.md and follow it.`
+- `PR <epic pr>, ticket <epic>, worktree <absolute path>`
+- `Read <this skill's base directory>/../implement-tickets/REVIEWER.md and follow it.`
 
 It reviews the integrated work against the epic, pushes its fixes onto the epic branch, comments its findings, and marks the epic PR ready as its last act, so the PR turns ready exactly when the review is finished. Nothing else writes to the epic branch while it runs.
 
