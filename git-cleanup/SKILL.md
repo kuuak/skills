@@ -16,7 +16,7 @@ Run from the main checkout of the repo in `$ARGUMENTS`, or the current one. Kind
 `git fetch --prune origin`, then collect every candidate:
 
 - **Worktrees**: each entry of `git worktree list --porcelain` other than the main checkout. Under `.claude/worktrees/`, `agent-*` folders are subagent worktrees; other names (`hungry-roentgen-303f59`) belong to Claude desktop sessions, which may still be open. Add each folder in the main checkout's parent directory named `<repo>-*`, registered or not; a standalone clone gets the same evidence as a worktree. A match that is no checkout at all (a `.zip` backup, a plain folder) goes in the report untouched.
-- **Branches**: local branches (`git for-each-ref refs/heads`) and remote ones (`refs/remotes/origin`). The default branch, protected branches (`gh api --paginate 'repos/{owner}/{repo}/branches?protected=true' --jq '.[].name'`), long-lived ones (`develop`, `staging`, `release/*`, a milestone's dev branch) and `dependabot/*` are owned elsewhere: list them as kept and gather nothing more.
+- **Branches**: local branches (`git for-each-ref refs/heads`) and remote ones (`refs/remotes/origin`, minus `origin/HEAD`, which only points at the default branch). A local branch checked out in a worktree shares that worktree's verdict, and the one checked out in the main checkout stays. The default branch, protected branches (`gh api --paginate 'repos/{owner}/{repo}/branches?protected=true' --jq '.[].name'`), long-lived ones (`develop`, `staging`, `release/*`, a milestone's dev branch) and `dependabot/*` are owned elsewhere: list them as kept and gather nothing more.
 - **Stashes**: `git stash list --format='%gd|%H|%ci|%gs'`. Record each stash's SHA: indexes shift as stashes are dropped, the SHA does not.
 
 **Done when:** every candidate is listed with its kind, and its branch or detached HEAD (worktree), upstream (branch), or SHA, date and message (stash).
@@ -59,7 +59,7 @@ Ask in one multi-select question, one option per group (live worktrees, finished
 Act only on names from step 1. Branches and stashes created while this ran belong to someone else's work; list them as kept.
 
 - **Worktrees**: `git worktree remove --force <path>`; the force is safe because step 2 already cleared the folder. A removal can unregister the worktree, then stop on `Directory not empty` with files left behind: confirm `git -C <path> rev-parse --git-dir` now fails, then `rm -rf` the leftover folder. Then `git worktree prune`.
-- **Local branches**: `git branch -D <names>` (`-d` refuses squash-merged branches). Record each tip SHA first, for the report.
+- **Local branches**: once the worktrees are gone, `git branch -D <names>` (`-d` refuses squash-merged branches), leaving out any branch `git worktree list` still shows checked out; git refuses to delete those. Record each tip SHA first, for the report.
 - **Remote branches**: record each tip SHA from `refs/remotes/origin/<name>` first (the push removes it), then `git push origin --delete <names>`.
 - **Stashes**: resolve each approved SHA to its current `stash@{n}`, then `git stash drop` them from the highest index down. To save a holding stash as a branch without touching the main checkout: `git worktree add -b <name> <tmp> <sha>^1`, `git -C <tmp> stash apply <sha>`, `git -C <tmp> add -A` (the stash's untracked files come back untracked), commit, push, remove the worktree, then drop the stash.
 
