@@ -16,7 +16,7 @@ Run from the main checkout of the repo in `$ARGUMENTS`, or the current one. Kind
 `git fetch --prune origin`, then collect every candidate:
 
 - **Worktrees**: each entry of `git worktree list --porcelain` other than the main checkout. Under `.claude/worktrees/`, `agent-*` folders are subagent worktrees; other names (`hungry-roentgen-303f59`) belong to Claude desktop sessions, which may still be open. Add each folder in the main checkout's parent directory named `<repo>-*`, registered or not; a standalone clone gets the same evidence as a worktree. A match that is no checkout at all (a `.zip` backup, a plain folder) goes in the report untouched.
-- **Branches**: local branches (`git for-each-ref refs/heads`) and remote ones (`refs/remotes/origin`). The default branch, protected branches (`gh api repos/{owner}/{repo}/branches --jq '.[]|select(.protected).name'`), long-lived ones (`develop`, `staging`, `release/*`, a milestone's dev branch) and `dependabot/*` are owned elsewhere: list them as kept and gather nothing more.
+- **Branches**: local branches (`git for-each-ref refs/heads`) and remote ones (`refs/remotes/origin`). The default branch, protected branches (`gh api --paginate 'repos/{owner}/{repo}/branches?protected=true' --jq '.[].name'`), long-lived ones (`develop`, `staging`, `release/*`, a milestone's dev branch) and `dependabot/*` are owned elsewhere: list them as kept and gather nothing more.
 - **Stashes**: `git stash list --format='%gd|%H|%ci|%gs'`. Record each stash's SHA: indexes shift as stashes are dropped, the SHA does not.
 
 **Done when:** every candidate is listed with its kind, and its branch or detached HEAD (worktree), upstream (branch), or SHA, date and message (stash).
