@@ -60,11 +60,11 @@ Act only on names from step 1. Branches and stashes created while this ran belon
 
 - **Worktrees**: `git worktree remove --force <path>`; the force is safe because step 2 already cleared the folder. A removal can unregister the worktree, then stop on `Directory not empty` with files left behind: confirm `git -C <path> rev-parse --git-dir` now fails, then `rm -rf` the leftover folder. Then `git worktree prune`.
 - **Local branches**: `git branch -D <names>` (`-d` refuses squash-merged branches). Record each tip SHA first, for the report.
-- **Remote branches**: `git push origin --delete <names>`.
+- **Remote branches**: record each tip SHA from `refs/remotes/origin/<name>` first (the push removes it), then `git push origin --delete <names>`.
 - **Stashes**: resolve each approved SHA to its current `stash@{n}`, then `git stash drop` them from the highest index down. To save a holding stash as a branch without touching the main checkout: `git worktree add -b <name> <tmp> <sha>^1`, `git -C <tmp> stash apply <sha>`, `git -C <tmp> add -A` (the stash's untracked files come back untracked), commit, push, remove the worktree, then drop the stash.
 
 **Done when:** `git worktree list`, `git branch -a` and `git stash list` show only the main checkout and what was kept.
 
 ## 5. Report
 
-One table per kind: name, verdict, evidence, and size (worktrees). Then the total space freed; the SHA of each deleted branch and stash, which restores it while git still holds the object (`git branch <name> <sha>`, `git stash store -m <message> <sha>`); what was kept and why; anything left untouched.
+One table per kind: name, verdict, evidence, and size (worktrees). Then the total space freed; the SHA of each deleted branch and stash, which restores it while git still holds the object (`git branch <name> <sha>`, `git push origin <sha>:refs/heads/<name>` for a remote one, `git stash store -m <message> <sha>`); what was kept and why; anything left untouched.
