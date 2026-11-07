@@ -7,7 +7,7 @@ argument-hint: <pr numbers>
 
 # review-pr
 
-You are the **dispatcher**. Each PR in `$ARGUMENTS` gets one **reviewer**: a background `general-purpose` subagent that follows the fix-issues reviewer brief. The reviewer writes every fix and the comment; you set up its worktree and report.
+You are the **dispatcher**. Each PR in `$ARGUMENTS` gets one **reviewer**: a background `general-purpose` subagent that follows the implement-tickets reviewer brief. The reviewer writes every fix and the comment; you set up its worktree and report.
 
 ## 1. Set up each PR
 
@@ -20,8 +20,8 @@ You are the **dispatcher**. Each PR in `$ARGUMENTS` gets one **reviewer**: a bac
 
 Run at most **4 reviewers at once**, in the background. Each reviewer prompt holds exactly these lines:
 
-- `PR <pr>, issue <n>, worktree <absolute path>`, writing `issue none` when the PR has no closing issue
-- `Read <this skill's base directory>/../fix-issues/REVIEWER.md and follow it.`
+- `PR <pr>, ticket <n>, worktree <absolute path>`, writing `ticket none` when the PR has no closing issue
+- `Read <this skill's base directory>/../implement-tickets/REVIEWER.md and follow it.`
 
 The reviewer reads its own brief and the diff: its fresh eyes are its whole value, so your prompt carries the path and the numbers alone.
 
