@@ -61,7 +61,7 @@ Act only on names from step 1. Branches and stashes created while this ran belon
 - **Worktrees**: `git worktree remove --force <path>`; the force is safe because step 2 already cleared the folder. A removal can unregister the worktree, then stop on `Directory not empty` with files left behind: confirm `git -C <path> rev-parse --git-dir` now fails, then `rm -rf` the leftover folder. Then `git worktree prune`.
 - **Local branches**: `git branch -D <names>` (`-d` refuses squash-merged branches). Record each tip SHA first, for the report.
 - **Remote branches**: `git push origin --delete <names>`.
-- **Stashes**: resolve each approved SHA to its current `stash@{n}`, then `git stash drop` them from the highest index down. To save a holding stash as a branch without touching the main checkout: `git worktree add -b <name> <tmp> <sha>^1`, `git -C <tmp> stash apply <sha>`, commit, push, remove the worktree, then drop the stash.
+- **Stashes**: resolve each approved SHA to its current `stash@{n}`, then `git stash drop` them from the highest index down. To save a holding stash as a branch without touching the main checkout: `git worktree add -b <name> <tmp> <sha>^1`, `git -C <tmp> stash apply <sha>`, `git -C <tmp> add -A` (the stash's untracked files come back untracked), commit, push, remove the worktree, then drop the stash.
 
 **Done when:** `git worktree list`, `git branch -a` and `git stash list` show only the main checkout and what was kept.
 
