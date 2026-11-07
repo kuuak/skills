@@ -22,7 +22,7 @@ mkdir -p ~/.claude/skills
 for skill in skills/*/; do ln -sfn "$PWD/$skill" ~/.claude/skills/"$(basename "$skill")"; done
 ```
 
-`implement-tickets` was called `fix-issues` until November 2026. If you linked it under the old name, remove that link: `rm ~/.claude/skills/fix-issues`.
+`implement-tickets` was called `fix-issues` until November 2026. If you linked it under the old name, remove that link with `rm ~/.claude/skills/fix-issues`, then run the loop above again to link `implement-tickets`: `implement-epic` and `review-pr` read their briefs from `~/.claude/skills/implement-tickets/`.
 
 The skills drive GitHub through the `gh` CLI, so it needs to be installed and signed in.
 
