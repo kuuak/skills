@@ -29,7 +29,7 @@ Run from the main checkout of the repo in `$ARGUMENTS`, or the current one. Kind
 - **unpushed**: `git rev-list --count <ref> --not --remotes`. A local branch whose upstream shows `[gone]` lost its remote copy: its commits count as unpushed until proven landed.
 - **ahead**: `git rev-list --count origin/<default>..<ref>`. Zero means every commit is in the default branch's history.
 - **PR**: `gh pr list --state all --head <branch> --json number,state,title`. For a detached HEAD, or a branch with no PR, take the issue number from the branch name or commit subjects and look up its issue and how it closed.
-- **landed**: proof that commits ahead of the default branch are on it. Squash merges rewrite every commit, so `git cherry` and `ahead` report merged work as missing; prove it instead with a merged PR, a closed issue, or the change itself on `origin/<default>` (`git diff <ref> origin/<default> -- <files the branch changed>` prints nothing, `git grep <text> origin/<default> -- <path>`).
+- **landed**: proof that commits ahead of the default branch are on it. Squash merges rewrite every commit, so `git cherry` and `ahead` report merged work as missing; prove it instead with a merged PR, an issue closed as completed (`gh issue view <n> --json state,stateReason`; one closed as not planned proves nothing), or the change itself on `origin/<default>` (`git diff <ref> origin/<default> -- <files the branch changed>` prints nothing, `git grep <text> origin/<default> -- <path>`).
 - **local files** (worktrees): `git -C <wt> status --porcelain --ignored` minus build output (`node_modules`, `.next`, caches, `logs/`). Diff each env file (`.env*.local`) against the main checkout's copy; one that differs, or that the main checkout lacks, is local-only.
 - **size** (worktrees): `du -sh <wt>`.
 
@@ -44,7 +44,7 @@ Run from the main checkout of the repo in `$ARGUMENTS`, or the current one. Kind
 
 ## 3. Classify and ask
 
-- **Finished**: landed with nothing local left, and its PR merged or closed (or no PR, and ahead is zero or its issue closed). Finished worktrees and local branches go without asking. A finished remote branch is asked about, since deleting it changes the shared repo.
+- **Finished**: landed with nothing local left, and its PR merged or closed (or no PR, and ahead is zero or its issue closed as completed). Finished worktrees and local branches go without asking. A finished remote branch is asked about, since deleting it changes the shared repo.
 - **Live**: landed, but its PR is still open, or it is a desktop-session worktree. Branches of open PRs stay; live worktrees are asked about.
 - **Abandoned**: unlanded, and its PR was closed unmerged or its issue closed as not planned. Ask, naming the commits that go with it.
 - **Obsolete** (stashes): ask.
