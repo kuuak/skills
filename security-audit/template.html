@@ -129,6 +129,11 @@
   .findings { display: grid; grid-template-columns: 1fr 1fr; gap: 5mm 8mm; }
   .finding { border-top: .6pt solid var(--line); padding-top: 2mm; break-inside: avoid; }
   .finding .num { font-size: 15pt; line-height: 1; letter-spacing: -.02em; }
+  /* Status at the top right of each finding: s-done (light, ticked) once handled, s-warn while open */
+  .finding .top { display: flex; justify-content: space-between; align-items: center; gap: 3mm; }
+  .finding.done h4, .finding.done p { color: var(--muted); }
+  .state.s-done { background: transparent; border-color: var(--line); color: var(--ink); }
+  .state.s-done::before { content: "✓ "; }
   .finding h4 { font-size: 9.6pt; font-weight: 400; line-height: 1.3; margin: 1mm 0 1.4mm; }
   .finding p { font-size: 8pt; line-height: 1.45; margin: 0; }
 
@@ -262,11 +267,16 @@
 
 <section>
   <div class="head"><h2>Autres constats</h2></div>
-  <p class="lead">Ces points sont sans lien avec la faille, mais méritent d'être traités.</p>
+  <p class="lead">Ces points sont sans lien avec la faille, mais méritent d'être traités. [Aucun n'est encore corrigé | Un est corrigé | N sont corrigés] ; l'état de chacun figure en haut à droite.</p>
   <div class="findings">
+    <div class="finding done">
+      <div class="top"><div class="num">1</div><span class="state s-done">Corrigé le [dd.mm]</span></div>
+      <h4>[Constat traité]</h4>
+      <p>[Description, sans chemin de fichier ni URL.]</p>
+    </div>
     <div class="finding">
-      <div class="num">1</div>
-      <h4>[Constat]</h4>
+      <div class="top"><div class="num">2</div><span class="state s-warn">Prévu le [dd.mm]</span></div>
+      <h4>[Constat ouvert]</h4>
       <p>[Description, sans chemin de fichier ni URL.]</p>
     </div>
   </div>
