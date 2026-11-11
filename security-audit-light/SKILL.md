@@ -1,12 +1,12 @@
 ---
 name: security-audit-light
-description: Run a passive security check-up of a site we built but no longer maintain, and deliver a client report sorting findings into OK, to watch and to fix, with estimated actions the client ticks. Use when the user asks for a light audit or security check-up, or a report to offer maintenance to a past client.
+description: Run a passive security check-up of a site, ours or a prospect's, and deliver a client report sorting findings into OK, to watch and to fix, with estimated actions the client ticks. Use when the user asks for a light audit or security check-up, or a report to offer maintenance to a past client or a prospect.
 argument-hint: [site URLs] [ssh host] [--no-estimates]
 ---
 
 # security-audit-light
 
-A **check-up** of a site the agency built and no longer maintains: what is fine, what to watch, what to fix, and what each fix costs. The client reads the report as an offer: they tick the actions they want and reply with their numbers. The deliverable is a client PDF built from [`template.html`](template.html).
+A **check-up** of a site, most often one the agency built and no longer maintains: what is fine, what to watch, what to fix, and what each fix costs. The client reads the report as an offer: they tick the actions they want and reply with their numbers. The deliverable is a client PDF built from [`template.html`](template.html).
 
 Every probe is **passive** and **paced**: a GET or HEAD request of the kind a visitor's browser sends, at the pace set in [`CHECKS.md`](CHECKS.md#pace). Login attempts, form submissions and scanners belong to a signed engagement. When SSH still works, servers stay read-only, as in [`security-audit`](../security-audit/SKILL.md).
 
@@ -16,7 +16,13 @@ A sign of **compromise** turns the check-up into an incident. When a check liste
 
 In the site's repo, read the project memory (the `<project>-hosting-forensics` note, when an earlier audit wrote one), `CLAUDE.md`, deploy docs and `~/.ssh/config`, then pick the audit folder by the rule in step 1 of [`security-audit`](../security-audit/SKILL.md#1-scope). With no repo on this machine, the audit folder defaults to `~/Documents/check-ups/<site>/`, and the year the site was built comes from the user. Read any earlier check-up report in the audit folder: the new summary says what changed since.
 
-Check that the site is ours: the repo, or the agency named in the site's footer credit. When the footer names another agency, tell the user before going on.
+Settle which case the site is:
+
+- **Past client** (the default): ours, no longer maintained. Check that the site is ours: the repo, or the agency named in the site's footer credit. When the footer names another agency, tell the user before going on.
+- **Current client**: the repo shows deploys in the last three months, or the user says the site is under maintenance or was delivered within the year. Some findings may come from our own work: ask how their actions are billed (under the contract, at our cost, or estimated as usual).
+- **Prospect**: the user says the site is not ours. There is no build year and no last delivery.
+
+When deploy configs disagree on the production server (`wp-cli.yml`, `~/.ssh/config`, CI variables), the server the site's DNS points to wins; behind a CDN, the CI deploy target (`gh variable list --env production`). Tell the user which source was wrong.
 
 Then ask, in one `AskUserQuestion`, only what is still unknown:
 
@@ -24,15 +30,16 @@ Then ask, in one `AskUserQuestion`, only what is still unknown:
 - the SSH alias, or "no access";
 - the report language;
 - the client's display name;
-- the year the site was built, when no repo gives it;
+- the year the site was built, when no repo gives it (not for a prospect);
+- for a current client, how the actions are billed;
 - whether the report carries **estimates** (yes by default; no when the work is already covered elsewhere, such as a prospect or a client about to sign a redo of the site), unless `--no-estimates` was passed;
 - the audit folder, when the repo does not settle it.
 
-**Done when:** every site has a URL, access is an alias or a recorded "no access", and the language, client name, build year, estimates and audit folder are set.
+**Done when:** the case is set, every site has a URL, access is an alias or a recorded "no access", and the language, client name, build year (past and current clients), estimates and audit folder are set.
 
 ## 2. Outside
 
-Tell the site's CMS from its home page and read its section of [`STACKS.md`](STACKS.md). With SSH, run the [server checks](CHECKS.md#server) first. Then run every check in [`CHECKS.md`](CHECKS.md#outside) against every site, at its pace.
+Tell the site's stack from its home page and read its sections of [`STACKS.md`](STACKS.md); a headless site has a frontend and a backend host, each with its own stack. With SSH, run the [server checks](CHECKS.md#server) first. Then run every check in [`CHECKS.md`](CHECKS.md#outside) against every site, at its pace.
 
 **Done when:** every check has a result, or a stated reason it could not run, for every site.
 
@@ -45,6 +52,8 @@ List every component: CMS core, plugins, modules, themes, packages, PHP or Node,
 ## 4. Classify
 
 Sort every result into **OK**, **to watch** or **to fix** by [`RUBRIC.md`](RUBRIC.md). For a result the rubric does not name, apply its principles and tell the user which bucket you chose.
+
+When a dump, backup or secret was downloadable and SSH works, search the access logs read-only for its name. A download by anyone but us means the data has leaked: show the user, as for a compromise sign, before going on.
 
 Then give each finding to watch or fix an action from [`ESTIMATES.md`](ESTIMATES.md); one action may cover several findings. When no action fits, ask the user for an estimate and add the action to the catalog. When the user declines to give one, or the action is on a stack outside the agency's (see `ESTIMATES.md`), the action goes in the report "à discuter", outside the totals. A report without estimates still takes its action labels from the catalog and skips the hours.
 
